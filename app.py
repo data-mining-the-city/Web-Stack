@@ -161,6 +161,7 @@ def getData():
 				for i in range(max(0, (pos_x-spread)), min(numW, (pos_x+spread))):
 					grid[j][i] += 2 * math.exp((-point_distance(i,j,pos_x,pos_y)**2)/(2*(spread/2)**2))
 
+		q.put('idle')
 
 	else:
 		## MACHINE LEARNING IMPLEMENTATION
@@ -249,8 +250,6 @@ def getData():
 			newItem['value'] = grid[j][i]
 
 			output["analysis"].append(newItem)
-
-	# q.put('idle')
 
 	return json.dumps(output)
 
