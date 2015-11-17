@@ -65,21 +65,21 @@ def getData():
 
 	q.put("starting data query...")
 
-	lat1 = str(request.args.get('lat1'))
-	lng1 = str(request.args.get('lng1'))
-	lat2 = str(request.args.get('lat2'))
-	lng2 = str(request.args.get('lng2'))
+	#lat1 = str(request.args.get('lat1'))
+	#lng1 = str(request.args.get('lng1'))
+	#lat2 = str(request.args.get('lat2'))
+	#lng2 = str(request.args.get('lng2'))
 
-	w = float(request.args.get('w'))
-	h = float(request.args.get('h'))
-	cell_size = float(request.args.get('cell_size'))
+	#w = float(request.args.get('w'))
+	#h = float(request.args.get('h'))
+	#cell_size = float(request.args.get('cell_size'))
 
-	analysis = request.args.get('analysis')
+	#analysis = request.args.get('analysis')
 
 	#CAPTURE ANY ADDITIONAL ARGUMENTS SENT FROM THE CLIENT HERE
 
-	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
-	
+	#print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
+
 	client = pyorient.OrientDB("localhost", 2424)
 	session_id = client.connect("root", "password")
 	db_name = "soufun"
@@ -93,13 +93,15 @@ def getData():
 		print "database [" + db_name + "] does not exist! session ending..."
 		sys.exit()
 
-	query = 'SELECT FROM Listing WHERE latitude BETWEEN {} AND {} AND longitude BETWEEN {} AND {} AND prec = 1 AND conf > 60'
+
+
+	query = 'SELECT lat, lng, cat_2 FROM Place WHERE cat_1 = "Outdoors" AND city = 0752'
 
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
 
-	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL 
+	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL
 	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSIS
-	
+
 	# random.shuffle(records)
 	# records = records[:100]
 
@@ -108,50 +110,47 @@ def getData():
 
 	client.db_close()
 
-	# iterate through data to find minimum and maximum price
-	minPrice = 1000000000
-	maxPrice = 0
+ 	#iterate through data to find minimum and maximum price
+	#minPrice = 1000000000
+	#maxPrice = 0
 
-	for record in records:
-		price = record.price
+	#for record in records:
+	#	price = record.price
 
-		if price > maxPrice:
-			maxPrice = price
-		if price < minPrice:
-			minPrice = price
+	#	if price > maxPrice:
+	#		maxPrice = price
+	#	if price < minPrice:
+	#		minPrice = price
 
-	print minPrice
-	print maxPrice
+	#print minPrice
+	#print maxPrice
 
 	output = {"type":"FeatureCollection","features":[]}
 
 	for record in records:
 		feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-		feature["id"] = record._rid
-		feature["properties"]["name"] = record.title
-		feature["properties"]["price"] = record.price
-		feature["properties"]["priceNorm"] = remap(record.price, minPrice, maxPrice, 0, 1)
-		feature["geometry"]["coordinates"] = [record.latitude, record.longitude]
+		feature["properties"]["category"]=record.cat_2
+		feature["geometry"]["coordinates"]=[record.lat, record.lng]
 
 		output["features"].append(feature)
 
-	if analysis == "false":
-		q.put('idle')
-		return json.dumps(output)
+	#if analysis == "false":
+	#	q.put('idle')
+	#	return json.dumps(output)
 
-	q.put('starting analysis...')
+	#q.put('starting analysis...')
 
-	output["analysis"] = []
+	#output["analysis"] = []
 
-	numW = int(math.floor(w/cell_size))
-	numH = int(math.floor(h/cell_size))
+	#numW = int(math.floor(w/cell_size))
+	#numH = int(math.floor(h/cell_size))
 
-	grid = []
+	#grid = []
 
-	for j in range(numH):
-		grid.append([])
-		for i in range(numW):
-			grid[j].append(0)
+	#for j in range(numH):
+	#	grid.append([])
+	#	for i in range(numW):
+	#		grid[j].append(0)
 
 	#USE CONDITIONAL ALONG WITH UI INFORMATION RECEIVED FROM THE CLIENT TO SWITCH
 	#BETWEEN HEAT MAP AND INTERPOLATION ANALYSIS
@@ -172,12 +171,12 @@ def getData():
 
 	## MACHINE LEARNING IMPLEMENTATION
 
-	featureData = []
-	targetData = []
+	#featureData = []
+	#targetData = []
 
-	for record in records:
-		featureData.append([record.latitude, record.longitude])
-		targetData.append(record.price)
+	#for record in records:
+	#	featureData.append([record.latitude, record.longitude])
+	#	targetData.append(record.price)
 
 	X = np.asarray(featureData, dtype='float')
 	y = np.asarray(targetData, dtype='float')
