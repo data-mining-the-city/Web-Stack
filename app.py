@@ -100,7 +100,7 @@ def getData():
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
 
 	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL
-	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSIS
+	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSI
 
 	# random.shuffle(records)
 	# records = records[:100]
