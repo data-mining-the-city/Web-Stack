@@ -1,1 +1,1 @@
-# in progress, do not fork yet!
+Soufun implementation of DMC Web Stack
