@@ -22,33 +22,33 @@ app = Flask(__name__)
 
 q = Queue()
 
-def point_distance(x1, y1, x2, y2):
-	return ((x1-x2)**2.0 + (y1-y2)**2.0)**(0.5)
+#def point_distance(x1, y1, x2, y2):
+#	return ((x1-x2)**2.0 + (y1-y2)**2.0)**(0.5)
 
-def remap(value, min1, max1, min2, max2):
-	return float(min2) + (float(value) - float(min1)) * (float(max2) - float(min2)) / (float(max1) - float(min1))
+#def remap(value, min1, max1, min2, max2):
+#	return float(min2) + (float(value) - float(min1)) * (float(max2) - float(min2)) / (float(max1) - float(min1))
 
-def normalizeArray(inputArray):
-	maxVal = 0
-	minVal = 100000000000
+#def normalizeArray(inputArray):
+#	maxVal = 0
+#	minVal = 100000000000
 
-	for j in range(len(inputArray)):
-		for i in range(len(inputArray[j])):
-			if inputArray[j][i] > maxVal:
-				maxVal = inputArray[j][i]
-			if inputArray[j][i] < minVal:
-				minVal = inputArray[j][i]
+#	for j in range(len(inputArray)):
+#		for i in range(len(inputArray[j])):
+#			if inputArray[j][i] > maxVal:
+#				maxVal = inputArray[j][i]
+#			if inputArray[j][i] < minVal:
+#				minVal = inputArray[j][i]
 
-	for j in range(len(inputArray)):
-		for i in range(len(inputArray[j])):
-			inputArray[j][i] = remap(inputArray[j][i], minVal, maxVal, 0, 1)
+#	for j in range(len(inputArray)):
+#		for i in range(len(inputArray[j])):
+#			inputArray[j][i] = remap(inputArray[j][i], minVal, maxVal, 0, 1)
 
-	return inputArray
+#	return inputArray
 
-def event_stream():
-    while True:
-        result = q.get()
-        yield 'data: %s\n\n' % str(result)
+#def event_stream():
+#    while True:
+#        result = q.get()
+#        yield 'data: %s\n\n' % str(result)
 
 @app.route('/eventSource/')
 def sse_source():
@@ -100,7 +100,7 @@ def getData():
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
 
 	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL
-	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSI
+	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSIS
 
 	# random.shuffle(records)
 	# records = records[:100]
@@ -178,83 +178,83 @@ def getData():
 	#	featureData.append([record.latitude, record.longitude])
 	#	targetData.append(record.price)
 
-	X = np.asarray(featureData, dtype='float')
-	y = np.asarray(targetData, dtype='float')
+	#X = np.asarray(featureData, dtype='float')
+	#y = np.asarray(targetData, dtype='float')
 
-	breakpoint = int(numListings * .7)
+	#breakpoint = int(numListings * .7)
 
-	print "length of dataset: " + str(numListings)
-	print "length of training set: " + str(breakpoint)
-	print "length of validation set: " + str(numListings-breakpoint)
+	#print "length of dataset: " + str(numListings)
+	#print "length of training set: " + str(breakpoint)
+	#print "length of validation set: " + str(numListings-breakpoint)
 
 	# create training and validation set
-	X_train = X[:breakpoint]
-	X_val = X[breakpoint:]
+	#X_train = X[:breakpoint]
+	#X_val = X[breakpoint:]
 
-	y_train = y[:breakpoint]
-	y_val = y[breakpoint:]
+	#y_train = y[:breakpoint]
+	#y_val = y[breakpoint:]
 
 	#mean 0, variance 1
-	scaler = preprocessing.StandardScaler().fit(X_train)
-	X_train_scaled = scaler.transform(X_train)
+	#scaler = preprocessing.StandardScaler().fit(X_train)
+	#X_train_scaled = scaler.transform(X_train)
 
-	mse_min = 10000000000000000000000
+	#mse_min = 10000000000000000000000
 
-	for C in [.01, 1, 100, 10000, 1000000]:
+	#for C in [.01, 1, 100, 10000, 1000000]:
 
-		for e in [.01, 1, 100, 10000, 1000000]:
+	#	for e in [.01, 1, 100, 10000, 1000000]:
 
-				for g in [.01, 1, 100, 10000, 1000000]:
+	#			for g in [.01, 1, 100, 10000, 1000000]:
 
-					q.put("training model: C[" + str(C) + "], e[" + str(e) + "], g[" + str(g) + "]")
+	#				q.put("training model: C[" + str(C) + "], e[" + str(e) + "], g[" + str(g) + "]")
 
-					model = svm.SVR(C=C, epsilon=e, gamma=g, kernel='rbf', cache_size=2000)
-					model.fit(X_train_scaled, y_train)
+	#				model = svm.SVR(C=C, epsilon=e, gamma=g, kernel='rbf', cache_size=2000)
+	#				model.fit(X_train_scaled, y_train)
 
-					y_val_p = [model.predict(i) for i in X_val]
+	#				y_val_p = [model.predict(i) for i in X_val]
 
-					mse = 0
-					for i in range(len(y_val_p)):
-						mse += (y_val_p[i] - y_val[i]) ** 2
-					mse /= len(y_val_p)
+	#				mse = 0
+	#				for i in range(len(y_val_p)):
+	#					mse += (y_val_p[i] - y_val[i]) ** 2
+	#				mse /= len(y_val_p)
 
-					if mse < mse_min:
-						mse_min = mse
-						model_best = model
-						C_best = C
-						e_best = e
-						g_best = g
+	#				if mse < mse_min:
+	#					mse_min = mse
+	#					model_best = model
+	#					C_best = C
+	#					e_best = e
+	#					g_best = g
 
-	q.put("best model: C[" + str(C_best) + "], e[" + str(e_best) + "], g[" + str(g_best) + "]")
+	#q.put("best model: C[" + str(C_best) + "], e[" + str(e_best) + "], g[" + str(g_best) + "]")
 
-	for j in range(numH):
-		for i in range(numW):
-			lat = remap(j, numH, 0, lat1, lat2)
-			lng = remap(i, 0, numW, lng1, lng2)
+	#for j in range(numH):
+	#	for i in range(numW):
+	#		lat = remap(j, numH, 0, lat1, lat2)
+	#		lng = remap(i, 0, numW, lng1, lng2)
 
-			testData = [[lat, lng]]
-			X_test = np.asarray(testData, dtype='float')
-			X_test_scaled = scaler.transform(X_test)
-			grid[j][i] = model_best.predict(X_test_scaled)
+	#		testData = [[lat, lng]]
+	#		X_test = np.asarray(testData, dtype='float')
+	#		X_test_scaled = scaler.transform(X_test)
+	#		grid[j][i] = model_best.predict(X_test_scaled)
 
 
 
-	grid = normalizeArray(grid)
+	#grid = normalizeArray(grid)
 
-	offsetLeft = (w - numW * cell_size) / 2.0
-	offsetTop = (h - numH * cell_size) / 2.0
+	#offsetLeft = (w - numW * cell_size) / 2.0
+	#offsetTop = (h - numH * cell_size) / 2.0
 
-	for j in range(numH):
-		for i in range(numW):
-			newItem = {}
+	#for j in range(numH):
+	#	for i in range(numW):
+	#		newItem = {}
 
-			newItem['x'] = offsetLeft + i*cell_size
-			newItem['y'] = offsetTop + j*cell_size
-			newItem['width'] = cell_size-1
-			newItem['height'] = cell_size-1
-			newItem['value'] = grid[j][i]
+	#		newItem['x'] = offsetLeft + i*cell_size
+	#		newItem['y'] = offsetTop + j*cell_size
+	#		newItem['width'] = cell_size-1
+	#		newItem['height'] = cell_size-1
+	#		newItem['value'] = grid[j][i]
 
-			output["analysis"].append(newItem)
+	#		output["analysis"].append(newItem)
 
 	# q.put('idle')
 
