@@ -1,1 +1,1 @@
-# in progress, do not fork yet!
+Weibo implementation of DMC Web Stack
