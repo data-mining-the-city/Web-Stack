@@ -32,18 +32,128 @@ p.tooltip-text{
 	padding: 0px;
 }
 
+h4{  font-size: 18px;}
+
+div.ui{	background: rgba(255,255,255,.8);
+		position: fixed;
+		margin: 0px;
+		padding: 10px;
+		opacity: .2;
+		border: dashed;
+		border-width: 1px;
+		border-color: rgba(0,0,0,1)
+		-webkit-transition: border-color .25s, opacity .25s;
+		transition: border-color .25s, opacity .25s;
+		}
+
+div.ui:hover{opacity: 1;
+			border-color: rgba(0,0,0,0)}
+
 div.menu{
-	position: fixed;
-	margin: 0px;
-	padding: 10px;
 	top: 0px;
 	right: 0px;
-	width: 230px;
-	height: 230px;
-	background: rgba(255,255,255,.8);
+	width: 250px;
+	height: auto;
 }
 
 em{
   color: red;
-  font-weight: bold;
+  font-weight: bold;}
+
+
+ ul {  background: #EEEEEE;
+ 		padding:  7px 6px;
+ 		margin: 0 0 5px 0;
+		list-style: none;
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-flex-flow: row wrap;
+		flex-flow: row wrap;
+		}
+
+ul.grid, ul.spread{max-height: 0;
+		opacity: 0;
+		padding:0px 6px;
+ 		margin:0 0 0 0;
+	    -webkit-transition: opacity .5s, padding .5s, margin .5s, max-height .5s;
+		transition: opacity .5s, padding .5s, margin .5s, max-height .5s;}
+
+ul.visible{max-height: 50;
+		opacity: 1;
+		padding:  7px 6px !important;
+ 		margin: 0px 0 5px 0 !important;}
+
+
+ul.visible li label input{height:30px;}
+
+ul.grid li:first-child, ul.spread li:first-child {margin:0;
+							padding-bottom: 1em;}
+
+ul.grid li, ul.spread li {margin: -14px 0 0px 0;}
+
+ul li:first-child {width: 100%;
+	padding-left: .6em;
+	padding-bottom: .5em;}
+
+
+ul li {
+	margin: 0;
+	padding-left: 2px;
+	flex-grow: 1;}
+
+label {  width: 100%;}
+
+label input{  tab-index: 0;
+                position: absolute;
+                opacity: 0;
+                width: 100%;
+                height: 0;
 }
+
+ul.grid li, ul.spread li{visibility: hidden;}
+ul.visible li {visibility: visible;}
+
+:checked + div {
+    background-color: rgb(247,138,138) !important;
+    border-color: rgb(247,138,138) !important;
+    color:white !important;
+    font-size: 15;
+/*    padding: 3.5px 3 !important;*/
+}
+
+
+.toggel{
+  text-align: center;
+  border: 0;
+  border-radius: 0;
+  color: white;
+  z-index:2;
+  background-color:#CFCFCF;
+  padding: 3.5px;
+  border-style: solid;
+  border-color: #CFCFCF;
+  margin: 0 !important;
+  border-width: 4px;
+  font-family: sans-serif;
+  font-weight: bold !important;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+    -webkit-transition: background-color .35s, border-color .35s;
+    		transition: background-color .35s, border-color .35s;
+  -webkit-appearance: none;}
+
+  label:hover .toggel{
+  border: 0;
+  color: #CFCFCF;
+  border-style: solid;
+  
+  border-width: 4px;
+  background-color:white;
+    -webkit-transition: background-color .35s, border-color .35s;
+    		transition: background-color .35s, border-color .35s;
+  -webkit-appearance: none;}
+
+
