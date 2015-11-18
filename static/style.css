@@ -1,9 +1,10 @@
 body {
 	padding: 0;
 	margin: 0;
+	text-align: center ;
 	font-family: Helvetica, Arial, sans-serif;
-	font-size: 12px;
-	line-height: 18px;
+	font-size: 14px;
+	line-height: 5px;
 }
 html, body, #map {
 	height: 100%;
@@ -34,12 +35,13 @@ p.tooltip-text{
 
 div.menu{
 	position: fixed;
-	margin: 0px;
+	margin-top: 0px;
+	margin-left: 0px ;
 	padding: 10px;
-	top: 0px;
+	top: 5px;
 	right: 0px;
-	width: 250px;
-	height: 500px;
+	width: 1450px;
+	height: 110px;
 	background: rgba(255,255,255,.8);
 }
 
