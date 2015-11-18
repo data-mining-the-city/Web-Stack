@@ -1,14 +1,18 @@
-var map = L.map('map').setView([22.539029, 114.062076], 16);
+var tooltip = d3.select("div.tooltip");
+		var tooltip_title = d3.select("#title");
+		var tooltip_type = d3.select("#type");
+
+var map = L.map('map').setView([23.07, 114.4], 12);
 		//this is the OpenStreetMap tile implementation
-		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		}).addTo(map);
+		//L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    //		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		//}).addTo(map);
 		//uncomment for Mapbox implementation, and supply your own access token
-		// L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
-		// 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-		// 	mapid: 'mapbox.light',
-		// 	accessToken: [INSERT YOUR TOKEN HERE!]
-		// }).addTo(map);
+		 L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
+		 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		 	mapid: 'mapbox.light',
+		 	accessToken: ['pk.eyJ1IjoiYnJpYW5obyIsImEiOiJjaWZiZGg2cWUyaDI0cnNtN3owaGlncWpjIn0.vbcMvvW1wTCO_TGM77az0A']
+		 }).addTo(map);
 		//create variables to store a reference to svg and g elements
 		var svg = d3.select(map.getPanes().overlayPane).append("svg");
 		var g = svg.append("g").attr("class", "leaflet-zoom-hide");
@@ -26,6 +30,18 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 			var circles = g.selectAll("circle").data(data.features);
 			circles.enter()
 				.append("circle")
+				.on("mouseover", function(d){
+						tooltip.style("visibility", "visible");
+						tooltip_title.text(d.properties.title);
+						tooltip_type.text("Type: " + d.properties.category);
+					})
+					.on("mousemove", function(){
+						tooltip.style("top", (d3.event.pageY-10)+"px")
+						tooltip.style("left",(d3.event.pageX+10)+"px");
+					})
+					.on("mouseout", function(){
+						tooltip.style("visibility", "hidden");
+					})
 			    .attr("r", 10);
 			// function to update the data
 			function update() {

@@ -126,6 +126,7 @@ def getData():
 
         for record in records:
             feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+            feature["properties"]["id"]=record._rid
             feature["properties"]["category"]= record.cat_2
             feature["properties"]["title"]= record.title
             feature["geometry"]["coordinates"]=[record.lat, record.lng]
