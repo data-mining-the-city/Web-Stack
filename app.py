@@ -50,11 +50,11 @@ q = Queue()
 #        result = q.get()
 #        yield 'data: %s\n\n' % str(result)
 
-@app.route('/eventSource/')
-def sse_source():
-    return Response(
-            event_stream(),
-            mimetype='text/event-stream')
+#@app.route('/eventSource/')
+#def sse_source():
+#    return Response(
+#            event_stream(),
+#            mimetype='text/event-stream')
 
 @app.route("/")
 def index():
@@ -63,7 +63,7 @@ def index():
 @app.route("/getData/")
 def getData():
 
-	q.put("starting data query...")
+	#q.put("starting data query...")
 
 	#lat1 = str(request.args.get('lat1'))
 	#lng1 = str(request.args.get('lng1'))
@@ -86,7 +86,7 @@ def getData():
 	db_username = "admin"
 	db_password = "admin"
 
-	if client.db_exists( db_name, pyorient.STORAGE_TYPE_MEMORY ):
+        if client.db_exists( db_name, pyorient.STORAGE_TYPE_MEMORY ):
 		client.db_open( db_name, db_username, db_password )
 		print db_name + " opened successfully"
 	else:
@@ -95,12 +95,9 @@ def getData():
 
 
 
-	query = 'SELECT lat, lng, cat_2 FROM Place WHERE cat_1 = "Outdoors" AND city = 0752'
-
+        query = 'SELECT lat, lng, cat_2, title FROM Place WHERE cat_1 = "Outdoors" AND city = 0752'
 	records = client.command(query)
-
-	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL
-	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSIS
+	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSIS
 
 	# random.shuffle(records)
 	# records = records[:100]
@@ -112,7 +109,7 @@ def getData():
 
  	#iterate through data to find minimum and maximum price
 	#minPrice = 1000000000
-	#maxPrice = 0
+	#maxPrice =
 
 	#for record in records:
 	#	price = record.price
@@ -127,12 +124,13 @@ def getData():
 
 	output = {"type":"FeatureCollection","features":[]}
 
-	for record in records:
-		feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-		feature["properties"]["category"]=record.cat_2
-		feature["geometry"]["coordinates"]=[record.lat, record.lng]
+        for record in records:
+            feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+            feature["properties"]["category"]= record.cat_2
+            feature["properties"]["title"]= record.title
+            feature["geometry"]["coordinates"]=[record.lat, record.lng]
 
-		output["features"].append(feature)
+            output["features"].append(feature)
 
 	#if analysis == "false":
 	#	q.put('idle')
