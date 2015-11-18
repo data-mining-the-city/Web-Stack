@@ -82,7 +82,7 @@ def getData():
 
 	client = pyorient.OrientDB("localhost", 2424)
 	session_id = client.connect("root", "password")
-	db_name = "soufun"
+	db_name = "weibo"
 	db_username = "admin"
 	db_password = "admin"
 
@@ -97,7 +97,7 @@ def getData():
 
 	query = 'SELECT lat, lng, cat_2 FROM Place WHERE cat_1 = "Outdoors" AND city = 0752'
 
-	#records = client.command(query.format(lat1, lat2, lng1, lng2))
+	records = client.command(query)
 
 	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL
 	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSIS
