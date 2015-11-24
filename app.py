@@ -122,8 +122,9 @@ def getData():
 	#print minPrice
 	#print maxPrice
 
-	output = {"type":"FeatureCollection","features":[]}
 
+    output = {"type":"FeatureCollection","features":[]}
+    #add three sets of coordinates, times and checkins {UserID:{Check-In Time1: Check-In Location1}{Check-In Time2: Check-In Location2}{Check-In Time3: Check-In Location3}}
         for record in records:
             feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
             feature["properties"]["id"]=record._rid
@@ -132,6 +133,7 @@ def getData():
             feature["geometry"]["coordinates"]=[record.lat, record.lng]
 
             output["features"].append(feature)
+
 
 	#if analysis == "false":
 	#	q.put('idle')
