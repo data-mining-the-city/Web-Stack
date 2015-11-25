@@ -8,17 +8,24 @@ var eventOutputContainer = document.getElementById("message");
 		var tooltip = d3.select("div.tooltip");
 		var tooltip_title = d3.select("#title");
 		var tooltip_price = d3.select("#price");
+		
 		var map = L.map('map').setView([22.539029, 114.062076], 16);
+
+		//Creating variable for slider
+		
+
 		//this is the OpenStreetMap tile implementation
-		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		}).addTo(map);
+		//L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    		//attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		//}).addTo(map);
 		//uncomment for Mapbox implementation, and supply your own access token
-		// L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
-		// 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-		// 	mapid: 'mapbox.light',
-		// 	accessToken: [INSERT YOUR TOKEN HERE!]
-		// }).addTo(map);
+		L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		mapid: 'mapbox.dark',
+		accessToken: "pk.eyJ1IjoiYWszNzkzIiwiYSI6ImNpZjdmZ3V5eTBpOXpzaGx6a3hvbjVoemQifQ.Fflvuzl9_moN4a8H_k4m0w"
+		}).addTo(map);
+
+
 		//create variables to store a reference to svg and g elements
 		var svg = d3.select(map.getPanes().overlayPane).append("svg");
 		var g = svg.append("g").attr("class", "leaflet-zoom-hide");
