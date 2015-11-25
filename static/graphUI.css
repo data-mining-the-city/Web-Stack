@@ -1,10 +1,41 @@
-div.graph{
+div.time{
 	bottom:0px;
 	width: -moz-calc(100vw - 20px);
     width: -webkit-calc(100vw - 20px);
     width: calc(100vw - 20px);
-	height:150px;
+	height:180px;
 }
+
+div.graph{
+    bottom:0px;
+    padding:0;
+    height:100%;
+}
+
+ul.timeUI{
+    padding: 0 0 20 0;
+    background: none;
+    -webkit-flex-flow: row;
+    flex-flow: row;
+
+}
+
+li#timeControls{width:180px;
+                flex-grow:0;}
+
+.indexSelection{width: 170px}
+
+li#timeChart{
+    padding:0 0 0 10;
+    flex-grow: 1;}
+
+
+ul.indexSelection li:first-child { margin: 0;}
+ul.indexSelection li { margin: 0 0 2 0;}
+
+ul.indexSelection li label input { width: 170px;
+                                  height: 33px;}
+
 
 .axis path,
 .axis line {
@@ -23,6 +54,11 @@ path {
     fill: none;
 }
 
+.area { 
+    stroke: none;
+    opacity: .2;
+}
+
 .y, .x {    stroke: rgb(247,138,138);
             stroke-dasharray: 3,3;
             opacity: 1;
@@ -32,3 +68,6 @@ circle.point {stroke: rgb(247,138,138);
         fill: none;
             opacity: 1;
             stroke-width: 1px;}
+
+.areas{    width: 100vw;
+    height: 100vh;}

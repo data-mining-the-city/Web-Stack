@@ -47,7 +47,7 @@ $(document).click(function(){
 });
 
 
-var map = L.map('map').setView([22.539029, 114.062076], 16);
+var map = L.map('map').setView([22.769630, 113.707588], 10);
 
 //this is the OpenStreetMap tile implementation
 
@@ -72,6 +72,8 @@ var g_overlay = svg_overlay.append("g").attr("class", "leaflet-zoom-hide");
 
 var svg = d3.select(map.getPanes().overlayPane).append("svg");
 var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+var groupsvg = d3.select( map.getPanes().overlayPane ).append("svg").attr("class", "areas");
+var groups = groupsvg.append("g").attr("class", "leaflet-zoom-hide");
 
 function projectPoint(lat, lng) {
 	return map.latLngToLayerPoint(new L.LatLng(lat, lng));
@@ -201,4 +203,30 @@ function updateData(){
 
 };
 
+function drawCircles(){
+  var data = [
+    { "coords" : [ 22.987269, 113.743628 ], "ID" : 1, "Color" : "#ffbe4f" },
+    { "coords" : [ 23.094686, 113.304175 ], "ID" : 5, "Color" : "#6bd2db" },
+    { "coords" : [ 22.503470, 114.111670 ], "ID" : 4, "Color" : "#0ea7b5" },
+    { "coords" : [ 22.483169, 113.453863 ], "ID" : 3, "Color" : "#0c457d" },
+    { "coords" : [ 22.941748, 113.177832 ], "ID" : 2, "Color" : "#e8702a" }
+
+	(255,190,79)
+(107,210,219)
+	(14,167,181)
+	(12,69,125)
+
+
+  ].map( function(d){ var newPoint = map.latLngToLayerPoint( d.coords ); d.coords = { 'x' : newPoint.x, 'y' : newPoint.y }; return d; } );
+
+
+
+ groups.selectAll("circle").data( data ).enter().append("circle")
+    .attr("cx", function(d){ console.log(d); return d.coords.x } )
+    .attr("cy", function(d){ return d.coords.y } )
+    .attr("r", 20 )
+    .attr("ID",function(d){ return d.ID } )
+    .style("fill", "teal");};
+
+drawCircles();
 updateData();

@@ -3,12 +3,15 @@
 	<title>DMC Web Stack</title>
 	<script type="text/javascript" src="./static/lib/d3.js"></script>
 	<script type="text/javascript" src="./static/lib/leaflet.js"></script>
+	<script type="text/javascript" src="./static/random_data_functions.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="./static/lib/leaflet.css" />
 
 	<!-- import external stylesheet -->
 	<link rel="stylesheet" href="./static/style.css" />
 	<link rel="stylesheet" href="./static/graphUI.css" />
+	<link rel="stylesheet" href="./static/graphUI.css" />
+
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
@@ -75,8 +78,24 @@
 
 	<!--end upper-righthand menu -->
 
+
 	<!--graph-->
-	<div class="graph ui">
+	<div class="time ui">
+		<ul class ="timeUI">
+			<li id="timeControls">
+			<ul class="flex indexSelection">
+				<li><strong>Pick an Index:</strong></li>
+				<li><label for="SZCOMP"><input id="SZCOMP" name="index" value="SZ_399106" type="radio" checked><div class="toggel">SZCOMP  (local)</div></label></li>
+				<li><label for="SHCOMP"><input id="SHCOMP" name="index" value="INDEX_SSEC" type="radio"><div class="toggel">SHCOMP  (national)</div></label></li>
+				<li><label for="SPX"><input id="SPX" name="index" value="INDEX_GSPC" type="radio"><div class="toggel">SPX (US)</div></label></li>
+				<li><label for="SPG100"><input id="SPG100" name="index" value="ASX_IOO_AX" type="radio"><div class="toggel">SPG100 (global)</div></label></li>
+			</ul>
+			</li>
+			<li id="timeChart">	
+				<div class="graph"></li>
+			</li>
+
+
 	</div>
 
 	<!-- import external script -->
