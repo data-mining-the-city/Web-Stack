@@ -97,7 +97,7 @@ def getData():
 		print "database [" + db_name + "] does not exist! session ending..."
 		sys.exit()
 
-        query = 'SELECT * COUNT FROM Checkin LIMIT 500"'
+        query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-07 23:59:00"'
 	
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
 	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL	
@@ -131,7 +131,7 @@ def getData():
         #add three sets of coordinates, times and checkins {UserID:{Check-In Time1: Check-In Location1}{Check-In Time2: Check-In Location2}{Check-In Time3: Check-In Location3}}
         for record in records:
             feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-            feature["properties"]["words"]= record.text
+            #feature["properties"]["words"]= record.text
             feature["geometry"]["coordinates"]=[record.lat, record.lng]
 
             output["features"].append(feature)
@@ -172,94 +172,6 @@ def getData():
 	# 			grid[j][i] += 2 * math.exp((-point_distance(i,j,pos_x,pos_y)**2)/(2*(spread/2)**2))
 
 
-	## MACHINE LEARNING IMPLEMENTATION
-
-	#featureData = []
-	#targetData = []
-
-	#for record in records:
-	#	featureData.append([record.latitude, record.longitude])
-	#	targetData.append(record.price)
-
-	#X = np.asarray(featureData, dtype='float')
-	#y = np.asarray(targetData, dtype='float')
-
-	#breakpoint = int(numListings * .7)
-
-	#print "length of dataset: " + str(numListings)
-	#print "length of training set: " + str(breakpoint)
-	#print "length of validation set: " + str(numListings-breakpoint)
-
-	# create training and validation set
-	#X_train = X[:breakpoint]
-	#X_val = X[breakpoint:]
-
-	#y_train = y[:breakpoint]
-	#y_val = y[breakpoint:]
-
-	#mean 0, variance 1
-	#scaler = preprocessing.StandardScaler().fit(X_train)
-	#X_train_scaled = scaler.transform(X_train)
-
-	#mse_min = 10000000000000000000000
-
-	#for C in [.01, 1, 100, 10000, 1000000]:
-
-	#	for e in [.01, 1, 100, 10000, 1000000]:
-
-	#			for g in [.01, 1, 100, 10000, 1000000]:
-
-	#				q.put("training model: C[" + str(C) + "], e[" + str(e) + "], g[" + str(g) + "]")
-
-	#				model = svm.SVR(C=C, epsilon=e, gamma=g, kernel='rbf', cache_size=2000)
-	#				model.fit(X_train_scaled, y_train)
-
-	#				y_val_p = [model.predict(i) for i in X_val]
-
-	#				mse = 0
-	#				for i in range(len(y_val_p)):
-	#					mse += (y_val_p[i] - y_val[i]) ** 2
-	#				mse /= len(y_val_p)
-
-	#				if mse < mse_min:
-	#					mse_min = mse
-	#					model_best = model
-	#					C_best = C
-	#					e_best = e
-	#					g_best = g
-
-	#q.put("best model: C[" + str(C_best) + "], e[" + str(e_best) + "], g[" + str(g_best) + "]")
-
-	#for j in range(numH):
-	#	for i in range(numW):
-	#		lat = remap(j, numH, 0, lat1, lat2)
-	#		lng = remap(i, 0, numW, lng1, lng2)
-
-	#		testData = [[lat, lng]]
-	#		X_test = np.asarray(testData, dtype='float')
-	#		X_test_scaled = scaler.transform(X_test)
-	#		grid[j][i] = model_best.predict(X_test_scaled)
-
-
-
-	#grid = normalizeArray(grid)
-
-	#offsetLeft = (w - numW * cell_size) / 2.0
-	#offsetTop = (h - numH * cell_size) / 2.0
-
-	#for j in range(numH):
-	#	for i in range(numW):
-	#		newItem = {}
-
-	#		newItem['x'] = offsetLeft + i*cell_size
-	#		newItem['y'] = offsetTop + j*cell_size
-	#		newItem['width'] = cell_size-1
-	#		newItem['height'] = cell_size-1
-	#		newItem['value'] = grid[j][i]
-
-	#		output["analysis"].append(newItem)
-
-	# q.put('idle')
 
 	return json.dumps(output)
 
