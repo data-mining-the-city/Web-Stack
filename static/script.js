@@ -8,11 +8,11 @@ var eventOutputContainer = document.getElementById("message");
 		var tooltip = d3.select("div.tooltip");
 		var tooltip_title = d3.select("#title");
 		var tooltip_price = d3.select("#price");
-		
+
 		var map = L.map('map').setView([22.539029, 114.062076], 16);
 
 		//Creating variable for slider
-		
+
 
 		//this is the OpenStreetMap tile implementation
 		//L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
