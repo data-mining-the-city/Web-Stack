@@ -63,8 +63,6 @@ def index():
 @app.route("/getData/")
 def getData():
 
-	# TRY TO SEND BACK OTHER MESSAGES FROM THE SERVER. 
-	# MAKE SURE THE MESSAGES ARE BEING DISPLAYED ON THE FRONT END.
 	q.put("starting data query...")
 
 	lat1 = str(request.args.get('lat1'))
@@ -100,32 +98,11 @@ def getData():
         query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-07 23:59:00"'
 	
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
-	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL	
-	#HOW MANY RECORDS ARE CONSIDERED IN THE ANALYSIS
-
-	# random.shuffle(records)
-	# records = records[:100]
 
 	numListings = len(records)
 	print 'received ' + str(numListings) + ' records'
 
 	client.db_close()
-
- 	#iterate through data to find minimum and maximum price
-	#minPrice = 1000000000
-	#maxPrice =
-
-	#for record in records:
-	#	price = record.price
-
-	#	if price > maxPrice:
-	#		maxPrice = price
-	#	if price < minPrice:
-	#		minPrice = price
-
-	#print minPrice
-	#print maxPrice
-
 
         output = {"type":"FeatureCollection","features":[]}
         #add three sets of coordinates, times and checkins {UserID:{Check-In Time1: Check-In Location1}{Check-In Time2: Check-In Location2}{Check-In Time3: Check-In Location3}}
@@ -135,43 +112,6 @@ def getData():
             feature["geometry"]["coordinates"]=[record.lat, record.lng]
 
             output["features"].append(feature)
-
-
-	#if analysis == "false":
-	#	q.put('idle')
-	#	return json.dumps(output)
-
-	#q.put('starting analysis...')
-
-	#output["analysis"] = []
-
-	#numW = int(math.floor(w/cell_size))
-	#numH = int(math.floor(h/cell_size))
-
-	#grid = []
-
-	#for j in range(numH):
-	#	grid.append([])
-	#	for i in range(numW):
-	#		grid[j].append(0)
-
-	#USE CONDITIONAL ALONG WITH UI INFORMATION RECEIVED FROM THE CLIENT TO SWITCH
-	#BETWEEN HEAT MAP AND INTERPOLATION ANALYSIS
-
-	## HEAT MAP IMPLEMENTATION
-	# for record in records:
-
-	# 	pos_x = int(remap(record.longitude, lng1, lng2, 0, numW))
-	# 	pos_y = int(remap(record.latitude, lat1, lat2, numH, 0))
-
-	#USE INFORMATION RECEIVED FROM CLIENT TO CONTROL SPREAD OF HEAT MAP
-	# 	spread = 12
-
-	# 	for j in range(max(0, (pos_y-spread)), min(numH, (pos_y+spread))):
-	# 		for i in range(max(0, (pos_x-spread)), min(numW, (pos_x+spread))):
-	# 			grid[j][i] += 2 * math.exp((-point_distance(i,j,pos_x,pos_y)**2)/(2*(spread/2)**2))
-
-
 
 	return json.dumps(output)
 
@@ -218,7 +158,6 @@ def getData2():
 
 	client.db_close()
 
-	#ITERATE THROUGH THE DATA SET TO FIND THE MINIMUM AND MAXIMUM PRICE (YOU DID THIS IN A PREVIOUS ASSIGNMENT)
         minPrice = 1000000000
         maxPrice = 0
         
@@ -240,8 +179,6 @@ def getData2():
 		feature["id"] = record._rid
 		feature["properties"]["name"] = record.title
 		feature["properties"]["price"] = record.price
-		#ADD THE NORMALIZED PRICE AS A PROPERTY TO THE DATA COMING BACK FROM THE SERVER
-		#REMEMBER TO USE THE REMAP() HELPER FUNCTION WE DEFINED EARLIER
 		feature["geometry"]["coordinates"] = [record.latitude, record.longitude]
 
 		output["features"].append(feature)
