@@ -96,7 +96,7 @@ def getData():
 		sys.exit()
 
         query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-07 23:59:00"'
-	
+
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
 
 	numListings = len(records)
@@ -132,7 +132,7 @@ def getData2():
 	analysis = request.args.get('analysis')
 
 	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
-	
+
 	client = pyorient.OrientDB("localhost", 2424)
 	session_id2 = client.connect("root", "password")
 	db_name2 = "soufun"
@@ -160,18 +160,18 @@ def getData2():
 
         minPrice = 1000000000
         maxPrice = 0
-        
+
         for record in records:
             price = record.price
-            
+
             if price > maxPrice:
                 maxPrice = price
             if price < minPrice:
                 minPrice = price
-                
+
         print minPrice
-        print maxPrice       
-    
+        print maxPrice
+
 	output = {"type":"FeatureCollection","features":[]}
 
 	for record in records:
