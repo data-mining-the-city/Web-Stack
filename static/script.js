@@ -134,5 +134,5 @@ var eventOutputContainer = document.getElementById("message");
     			.attr("r", function(d) { return Math.pow(d.properties.price,.3); });
 		};
 	});
-
+};
 		updateData();
