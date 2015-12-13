@@ -13,8 +13,8 @@ import pyorient
 
 from Queue import Queue
 
-from sklearn import preprocessing
-from sklearn import svm
+#from sklearn import preprocessing
+#from sklearn import svm
 
 import numpy as np
 
@@ -53,7 +53,7 @@ def getData():
 	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
 	
 	client = pyorient.OrientDB("localhost", 2424)
-	session_id = client.connect("root", "password")
+	session_id = client.connect("root", "474F1CBE549F9E33FC8A0793C7819485072DAE07A4B704138010F28A28B69DF9")
 	db_name = "weibo"
 	db_username = "admin"
 	db_password = "admin"
@@ -130,4 +130,4 @@ def getData():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=5000,debug=True,threaded=True)
+    app.run(host='0.0.0.0',port=4000,debug=True,threaded=True)
