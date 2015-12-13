@@ -95,7 +95,7 @@ def getData():
 		print "database [" + db_name + "] does not exist! session ending..."
 		sys.exit()
 
-        query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-07 23:59:00"'
+        query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-01-21 23:59:00"'
 
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
 
@@ -108,11 +108,12 @@ def getData():
         #add three sets of coordinates, times and checkins {UserID:{Check-In Time1: Check-In Location1}{Check-In Time2: Check-In Location2}{Check-In Time3: Check-In Location3}}
         for record in records:
             feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-            #feature["properties"]["words"]= record.text
+            feature["properties"]["user"]= record.out
             feature["geometry"]["coordinates"]=[record.lat, record.lng]
+            print str(record.out)
 
             output["features"].append(feature)
-
+           
 	return json.dumps(output)
 
 @app.route("/getData2/")
