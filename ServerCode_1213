@@ -37,8 +37,8 @@ app = Flask(__name__)
 #def index():
     #return render_template("index.html")
 
-#@app.route("/getData/")
-#def getData():
+@app.route("/getData/")
+def getData():
 
 	#q.put("starting data query...")
 
@@ -75,7 +75,7 @@ def filter_database():
         print record
         person = client.command("SELECT expand(out) FROM {}".format(record._rid))
         print person
-        places = client.command("SELECT * FROM (TRAVERSE out(Checkin) FROM (SELECT * FROM {})) WHERE @class = 'Place'".format(person[0]._rid))
+        #places = client.command("SELECT * FROM (TRAVERSE out(Checkin) FROM (SELECT * FROM {})) WHERE @class = 'Place'".format(person[0]._rid))
         
         for place in places:
             print place._rid
@@ -120,27 +120,27 @@ def filter_database():
     client.db_close()
 
 
-	#output = {"type":"FeatureCollection","features":[]}
+	   output = {"type":"FeatureCollection","features":[]}
 
-	#for record in records:
+	       for record in records:
 		#if scoreDict[record._rid] < 1:
 			#continue
-		#feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-		#feature["id"] = record._rid
+		feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+		feature["id"] = record._rid
 		#feature["properties"]["name"] = record.title
 		#feature["properties"]["cat"] = record.cat_1
 		#feature["properties"]["score"] = scoreDict[record._rid]
-		#feature["geometry"]["coordinates"] = [record.lat, record.lng]
+		feature["geometry"]["coordinates"] = [record.lat, record.lng]
 
-		#output["features"].append(feature)
+		output["features"].append(feature)
 
 
 	#output["lines"] = lines
 
 	#q.put('idle')
-	#return json.dumps(output)
+	return json.dumps(output)
 
 filter_database()
 
-#if __name__ == "__main__":
-#    app.run(host='0.0.0.0',port=4000,debug=True,threaded=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0',port=4000,debug=True,threaded=True)
