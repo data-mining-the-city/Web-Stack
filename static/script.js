@@ -1,15 +1,19 @@
-var eventOutputContainer = document.getElementById("message");
-		var eventSrc = new EventSource("/eventSource");
-		eventSrc.onmessage = function(e) {
-			console.log(e);
-			eventOutputContainer.innerHTML = e.data;
-		};
-		// DON'T FORGET TO CHANGE THIS CODE DEPENDING ON THE DATA YOU'RE DISPLAYING IN YOUR TOOLTIP
-		var tooltip = d3.select("div.tooltip");
-		var tooltip_title = d3.select("#title");
-		var tooltip_price = d3.select("#price");
+//TEAM KUAILE JAVASCRIPT
 
-		var map = L.map('map').setView([22.539029, 114.062076], 16);
+var eventOutputContainer = document.getElementById("message");
+var eventSrc = new EventSource("/eventSource");
+
+eventSrc.onmessage = function(e) {
+	console.log(e);
+	eventOutputContainer.innerHTML = e.data;
+};
+
+// DON'T FORGET TO CHANGE THIS CODE DEPENDING ON THE DATA YOU'RE DISPLAYING IN YOUR TOOLTIP
+var tooltip = d3.select("div.tooltip");
+var tooltip_title = d3.select("#title");
+var tooltip_price = d3.select("#price");
+
+var map = L.map('map').setView([22.539029, 114.062076], 16);
 
 		//Creating variable for slider
 
@@ -27,26 +31,44 @@ var eventOutputContainer = document.getElementById("message");
 
 
 		//create variables to store a reference to svg and g elements
+		var svg_overlay = d3.select(map.getPanes().overlayPane).append("svg");
+		var g_overlay = svg_overlay.append("g").attr("class", "leaflet-zoom-hide");
+
 		var svg = d3.select(map.getPanes().overlayPane).append("svg");
 		var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
 		function projectPoint(lat, lng) {
 			return map.latLngToLayerPoint(new L.LatLng(lat, lng));
 		}
+
 		function projectStream(lat, lng) {
 			var point = projectPoint(lat,lng);
 			this.stream.point(point.x, point.y);
 		}
+
 		var transform = d3.geo.transform({point: projectStream});
 		var path = d3.geo.path().projection(transform);
+
 		function updateData(){
+
 			var mapBounds = map.getBounds();
 			var lat1 = mapBounds["_southWest"]["lat"];
 			var lat2 = mapBounds["_northEast"]["lat"];
 			var lng1 = mapBounds["_southWest"]["lng"];
 			var lng2 = mapBounds["_northEast"]["lng"];
+
+			// CAPTURE USER INPUT FOR CELL SIZE FROM HTML ELEMENTS
+			var cell_size = 25;
+			var w = window.innerWidth;
+			var h = window.innerHeight;
+
+			// SEND USER CHOICES FOR ANALYSIS TYPE, CELL SIZE, HEAT MAP SPREAD, ETC. TO SERVER
 			request = "/getData?lat1=" + lat1 + "&lat2=" + lat2 + "&lng1=" + lng1 + "&lng2=" + lng2
+
 			console.log(request);
+
 		  	d3.json(request, function(data) {
+
 				//create placeholder circle geometry and bind it to data
 				var circles = g.selectAll("circle").data(data.features);
 				circles.enter()
@@ -106,7 +128,7 @@ var eventOutputContainer = document.getElementById("message");
 			.attr("height", function(d) { return d.height; })
 	    	.attr("fill-opacity", ".2")
 	    	.attr("fill", function(d) { return "hsl(0, " + Math.floor(d.value*100) + "%, 50%)"; });
-		
+
 		// function to update the data
 		function update() {
 
@@ -131,7 +153,6 @@ var eventOutputContainer = document.getElementById("message");
 		    circles
 		    	.attr("cx", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).x; })
 		    	.attr("cy", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).y; })
-    			.attr("r", function(d) { return Math.pow(d.properties.price,.3); });
 		};
 	});
 };
