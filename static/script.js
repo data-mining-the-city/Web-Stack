@@ -12,7 +12,7 @@ var tooltip_title = d3.select("#title");
 var tooltip_category = d3.select("#cat");
 
 
-var map = L.map('map').setView([22.539029, 114.062076], 16);
+var map = L.map('map').setView([22.929935, 113.639837], 16);
 
 var markerClicked = false;
 	
@@ -24,11 +24,11 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 //uncomment for Mapbox implementation, and supply your own access token
 
-// L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
-// 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-// 	mapid: 'mapbox.light',
-// 	accessToken: [INSERT YOUR TOKEN HERE!]
-// }).addTo(map);
+L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
+ 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+ 	mapid: 'mapbox.dark',
+ 	accessToken: 'pk.eyJ1IjoiaXZyaWVsNTAxIiwiYSI6ImNpZm9wNnY4OWhwYjhzeWx4bDJucWFkeGgifQ.Hl_QF7F6JApTIPOeHBXlGQ'
+ }).addTo(map);
 
 //create variables to store a reference to svg and g elements
 

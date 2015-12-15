@@ -22,16 +22,16 @@ q = Queue()
 #def remap(value, min1, max1, min2, max2):
 	#return float(min2) + (float(value) - float(min1)) * (float(max2) - float(min2)) / (float(max1) - float(min1))
 
-#def event_stream():
-    #while True:
-        #result = q.get()
-        #yield 'data: %s\n\n' % str(result)
+def event_stream():
+    while True:
+        result = q.get()
+        yield 'data: %s\n\n' % str(result)
 
-#@app.route('/eventSource/')
-#def sse_source():
-    #return Response(
-            #event_stream(),
-            #mimetype='text/event-stream')
+@app.route('/eventSource/')
+def sse_source():
+    return Response(
+            event_stream(),
+            mimetype='text/event-stream')
 
 @app.route("/")
 def index():
@@ -86,7 +86,7 @@ def filter_database():
 
     	#skip repeating users
     	#if user in uniqueUsers:
-    		#continue
+    		continue
     	#uniqueUsers.append(user)
 
     	#find connected places
@@ -111,10 +111,11 @@ def filter_database():
 			#continue
 		feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
 		feature["id"] = record._rid
-		feature["properties"]["time"] = record.time
-		feature["properties"]["text"] = record.text
+		feature["properties"]["name"] = record.title
+		feature["properties"]["cat"] = record.cat_1
+		#feature["properties"]["score"] = scoreDict[record._rid]
 		feature["geometry"]["coordinates"] = [record.lat, record.lng]
-        print 'feature' + str(feature)
+
 		output["features"].append(feature)
 
 
@@ -126,4 +127,4 @@ def filter_database():
 filter_database()
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=5000,debug=True,threaded=True)
+    app.run(host='0.0.0.0',port=4000,debug=True,threaded=True)
