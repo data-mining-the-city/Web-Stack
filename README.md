@@ -16,11 +16,13 @@
 ## Server Back End [to be completed by Server team]
 
 Describe how the server interacts with the client, including:
+
 1. The arguments that are sent from the client and received by the server at the beginning of the request.
 2. Any update messages sent back to the client during the request.
 3. The data sent back to the client at the end of the request, including the data format.
 
 Describe how the server interacts with the database, including:
+
 1. The query that is sent to the database.
 2. How the results of the query are processed and formatted for sending back to the client.
 
