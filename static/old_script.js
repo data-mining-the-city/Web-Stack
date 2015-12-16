@@ -37,13 +37,11 @@ tipswitch = 1;
 })
 
 $(document).click(function(){
-	   console.log(monthend);
 	var overlay = $("input[name='overlay']:checked").val();
 	var Return  = $("input[name='Return']:checked").val();
 	var Analysis  = $("input[name='analysis']:checked").val();
 	var Fake  = $("input[name='fake']:checked").val();
 	var weekwidth = $("rect.w0").attr("weekwidth");
-	console.log(weekwidth);
 
 
 	if(Return == "regionalReturn")

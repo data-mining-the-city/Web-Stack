@@ -480,12 +480,15 @@ newgraph.select(".y_axis.axis") // change the x axis
  
     });};
 
+$(".index").click(function() {
+  updateIndex();
+
+});
 
 
 $("#regionalReturn").click(function() {
-  console.log("change");
   ActiveCategory = "";
-  updateIndex();
+  updateArea();
 
 });
 
