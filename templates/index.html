@@ -26,10 +26,37 @@
 	</div>
 
 	<!-- upper-righthand menu -->
+
+
 	<div class="menu ui">
-		<p><h4>DMC Web Stack</h4></p>
-		<form>			
+		<p><h4>In-Stock Consumer Behavior</h4></p>
+		<form>
+
+
+	<ul class="flex">
+			<li><strong>Unit of Analysis?</strong></li>
+			<li><label for="Total"><input id="Total" name="analysis" class="analysis" value="Total" type="radio" checked><div class="toggel">Total</div></label></li>
+
+			<li><label for="Month"><input id="Month" name="analysis" class="analysis" value="Month" type="radio"><div class="toggel">Month</div></label></li>
+			<li><label for="Weeks"><input id="Weeks" name="analysis" class="analysis" value="Weeks" type="radio"><div class="toggel">Weeks</div></label></li>
+		</ul>
+
+
 		<ul class="flex">
+			<li><strong>Show fake data?</strong></li>
+			<li><label for="Yes"><input id="Yes" name="fake" value="Yes" type="radio" ><div class="toggel">Yes</div></label></li>
+
+			<li><label for="No"><input id="No" name="fake" value="No" type="radio" checked><div class="toggel">No</div></label></li>
+		</ul>
+
+
+		<ul class="flex regional hidden">
+			<li><strong>Return to Regional View?</strong></li>
+			<li><label for="regionalReturn"><input id="regionalReturn" name="Return" value="regionalReturn" type="radio"><div class="toggel">Return</div></label></li>
+		</ul>	
+
+
+		<!-- <ul class="flex">
 			<li><strong>Use an analysis overlay?</strong></li>
 			<li><label for="interpolation"><input id="interpolation" name="overlay" value="interpolation" type="radio"><div class="toggel">Interpolation</div></label></li>
 
@@ -37,7 +64,7 @@
 		</ul>
 
 
-		<ul class="flex grid">
+		<ul class="flex grid hidden">
 			<li><strong>Cell Size:</strong></li>
 				<li><label for="10px"><input id="10px" name="grid" value="10" type="radio"><div class="toggel">10px</div></label></li>
 				<li><label for="25px"><input id="25px" name="grid" value="25" type="radio" checked>
@@ -51,7 +78,7 @@
 		</ul>
 
 
-		<ul class="flex spread">
+		<ul class="flex spread hidden">
 			<li><strong>Spread Size:</strong></li>
 				<li><label for="10Cells"><input id="10Cells" name="spread" value="10" type="radio">
 				<div class="toggel">10 Cells</div></label></li>
@@ -68,10 +95,10 @@
 				<li><label for="1000"><input id="1000" name="results" value="1000" type="radio"><div class="toggel">1000</div></label></li>
 				<li><label for="10000"><input id="10000" name="results" value="10000" type="radio"><div class="toggel">10000</div></label></li>
 				<li><label for="All"><input id="All" name="results" value="0" type="radio"><div class="toggel">All</div></label></li>
-		</ul>
+		</ul> -->
 
 
-			<p><input type="button" value="Update Data" onclick="updateData()"></p>
+<!-- 			<p><input type="button" value="Update Data" onclick="updateData()"></p> -->
 			<p>Status: <em id="message"></em></p>
 		</form>
 	</div>
@@ -99,8 +126,8 @@
 	</div>
 
 	<!-- import external script -->
-	<script type="text/javascript" src="./static/old_script.js"></script>
 	<script type="text/javascript" src="./static/graphUI.js"></script>
+	<script type="text/javascript" src="./static/old_script.js"></script>
 
 
 </body>

@@ -37,6 +37,10 @@ ul.indexSelection li label input { width: 170px;
                                   height: 33px;}
 
 
+.overlayBar:hover{opacity: 1;
+    outline: solid;
+    outline-width: 1px;}
+
 .axis path,
 .axis line {
     fill: none;
@@ -56,7 +60,7 @@ path {
 
 .area { 
     stroke: none;
-    opacity: .2;
+    opacity: .5;
 }
 
 .y, .x {    stroke: rgb(247,138,138);

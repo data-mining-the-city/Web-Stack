@@ -1,8 +1,8 @@
 
-
+var data = [];
 var eventOutputContainer = document.getElementById("message");
 var eventSrc = new EventSource("/eventSource");
-
+var tipswitch = 0;
 eventSrc.onmessage = function(e) {
 	console.log(e);
 	eventOutputContainer.innerHTML = e.data;
@@ -13,7 +13,7 @@ var tooltip_title = d3.select("#title");
 var tooltip_price = d3.select("#price");
 
 // uncheck radios:
-var allRadios = document.getElementsByName('overlay');
+var allRadios = document.getElementsByName('Return');
 var booRadio;
 var x = 0;
 for(x = 0; x < allRadios.length; x++){
@@ -28,21 +28,103 @@ for(x = 0; x < allRadios.length; x++){
     };
 }
 
+var QStart =  start + " 00:00:00";
+var QEnd = end + " 00:00:00";
+
+
+$(".analysis").click(function(){
+tipswitch = 1;
+})
 
 $(document).click(function(){
+	   console.log(monthend);
 	var overlay = $("input[name='overlay']:checked").val();
+	var Return  = $("input[name='Return']:checked").val();
+	var Analysis  = $("input[name='analysis']:checked").val();
+	var Fake  = $("input[name='fake']:checked").val();
+	var weekwidth = $("rect.w0").attr("weekwidth");
+	console.log(weekwidth);
 
-	if ((overlay == "interpolation") || (overlay == "heatmap")){
-		$(".grid").addClass("visible");
+
+	if(Return == "regionalReturn")
+	{
+	$(".regional").removeClass("visible");
+	ResetGraph();
+	$("input[name='Return']:checked").attr('checked', false);
+	groups.selectAll("circle").classed("active", false);
 	}
-	else{$(".grid").removeClass("visible");}
 
-	if (overlay == "heatmap"){
-		$(".spread").addClass("visible");
-	}
-	else{$(".spread").removeClass("visible");}
+	if (Analysis == "Total"){
+		groups.selectAll("circle").classed("weeks",false);
+		groups.selectAll("circle.w0").classed("weeks",true);
+		groups.selectAll("circle").attr("r", function(d){ return d.R });
+for(var i = 0; i < 4; i++){                     
+    graph.selectAll("rect.w"+i).transition().delay((4-i)*100)                               
+          .attr("width", 0)                             
+          .style("opacity", 0);                       
+             };   
+
+        if(	tipswitch == 1){
+		QStart =  start + " 00:00:00";
+		QEnd = end + " 00:00:00";
+		updateData();
 
 
+        };
+}
+
+	if (Analysis == "Month"){
+		groups.selectAll("circle").classed("weeks",false);
+		groups.selectAll("circle.w0").classed("weeks",true);
+		groups.selectAll("circle").attr("r", function(d){ return d.R });
+for(var i = 1; i < 4; i++){                     
+    graph.selectAll("rect.w"+i).transition().delay((4-i)*100)                               
+          .attr("width", 0)                             
+          .style("opacity", 0);                       
+             };
+    graph.selectAll("rect.w0").transition()                              
+          .attr("width", eval(weekwidth)*4)                             
+          .style("opacity", 1);
+    
+    if(	tipswitch == 1){
+    			QStart =  monthstart + " 00:00:00";
+		QEnd = monthend + " 00:00:00";
+		updateData();
+    };  
+
+}
+
+if (Analysis == "Weeks"){
+		groups.selectAll("circle").classed("weeks",true);
+            groups.selectAll("circle").attr("r", function(d){console.log(d.newRadius); return d.newRadius/2});
+for(var i = 0; i < 4; i++){                     
+    graph.selectAll("rect.w"+i).transition().delay(i*100)                               
+          .attr("width", eval(weekwidth))                             
+          .style("opacity", 1);                       
+             };
+if(	tipswitch == 1){
+	    			QStart =  monthstart + " 00:00:00";
+		QEnd = monthend + " 00:00:00";
+		updateData();
+};
+
+}
+
+if (Fake == "No"){
+		groups.selectAll("circle").classed("weeks",false);
+		hideAreas();
+            }
+
+else if(ActiveCategory == "" ){
+	 ResetGraph();
+}
+
+else{
+	updateArea();
+}
+            ;
+ 
+tipswitch = 0;
 
 });
 
@@ -96,7 +178,7 @@ function updateData(){
 	var lng2 = mapBounds["_northEast"]["lng"];
 
 	// CAPTURE USER INPUT FOR CELL SIZE FROM HTML ELEMENTS
-	var cell_size = $("input[name='grid']:checked").val();
+	// var cell_size = $("input[name='grid']:checked").val();
 	var w = window.innerWidth;
 	var h = window.innerHeight;
 
@@ -108,8 +190,9 @@ function updateData(){
 	var results = $("input[name='results']:checked").val();
 
 
+
 	// SEND USER CHOICES FOR ANALYSIS TYPE, CELL SIZE, HEAT MAP SPREAD, ETC. TO SERVER
-	request = "/getData?lat1=" + lat1 + "&lat2=" + lat2 + "&lng1=" + lng1 + "&lng2=" + lng2 + "&w=" + w + "&h=" + h + "&cell_size=" + cell_size + "&analysis=" + overlay + "&spread=" + spread + "&results=" + results
+	request = "/getData?lat1=" + lat1 + "&lat2=" + lat2 + "&lng1=" + lng1 + "&lng2=" + lng2 + "&w=" + w + "&h=" + h + "&starttime=" + QStart + "&endtime=" + QEnd
 
 	console.log(request);
 
@@ -178,8 +261,8 @@ function updateData(){
 				.append("circle")
 				.on("mouseover", function(d){
 					tooltip.style("visibility", "visible");
-					tooltip_title.text(d.properties.name);
-					tooltip_price.text("Price: " + d.properties.price);
+					// tooltip_title.text(d.properties.name);
+					// tooltip_price.text("Price: " + d.properties.price);
 				})
 				.on("mousemove", function(){
 					tooltip.style("top", (d3.event.pageY-10)+"px")
@@ -196,37 +279,46 @@ function updateData(){
 		    circles
 		    	.attr("cx", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).x; })
 		    	.attr("cy", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).y; })
-    			.attr("r", function(d) { return Math.pow(d.properties.price,.3); })
+    			.attr("r", 5)
+    			.attr("class", "dataPoint")
 				.exit();
 		};
 	});
 
 };
 
-function drawCircles(){
-  var data = [
-    { "coords" : [ 22.987269, 113.743628 ], "ID" : 1, "Color" : "#ffbe4f" },
-    { "coords" : [ 23.094686, 113.304175 ], "ID" : 5, "Color" : "#6bd2db" },
-    { "coords" : [ 22.503470, 114.111670 ], "ID" : 4, "Color" : "#0ea7b5" },
-    { "coords" : [ 22.483169, 113.453863 ], "ID" : 3, "Color" : "#0c457d" },
-    { "coords" : [ 22.941748, 113.177832 ], "ID" : 2, "Color" : "#e8702a" }
 
-	(255,190,79)
-(107,210,219)
-	(14,167,181)
-	(12,69,125)
+function drawCircles(i){
+   data = [];
 
+  for(var i = 0; i < 4; i++)
+  	data.push(
+    { "coords" : [ 22.987269, 113.743628 ], "R" : (allTotals[0]/50),"ID" : "A", "ID2" : 0, "week" : (i), "Color" : "#556270" },
+    { "coords" : [ 23.094686, 113.304175 ], "R" : (allTotals[1]/50),"ID" : "B", "ID2" : 1, "week" : (i), "Color" : "#4eccc3" },
+    { "coords" : [ 22.503470, 114.111670 ], "R" : (allTotals[2]/50),"ID" : "C", "ID2" : 2, "week" : (i), "Color" : "#c7f464" },
+    { "coords" : [ 22.483169, 113.453863 ], "R" : (allTotals[3]/50),"ID" : "D", "ID2" : 3, "week" : (i), "Color" : "#ff6b64" },
+    { "coords" : [ 22.941748, 113.177832 ], "R" : (allTotals[4]/50),"ID" : "E", "ID2" : 4, "week" : (i), "Color" : "#ffb04d" });
+  
 
-  ].map( function(d){ var newPoint = map.latLngToLayerPoint( d.coords ); d.coords = { 'x' : newPoint.x, 'y' : newPoint.y }; return d; } );
+  data.map( function(d){ var newPoint = map.latLngToLayerPoint( d.coords ); d.coords = { 'x' : newPoint.x, 'y' : newPoint.y }; return d; } );
 
 
 
  groups.selectAll("circle").data( data ).enter().append("circle")
-    .attr("cx", function(d){ console.log(d); return d.coords.x } )
+    .attr("cx", function(d){return d.coords.x } )
     .attr("cy", function(d){ return d.coords.y } )
-    .attr("r", 20 )
+    .attr("r", function(d){ return d.R } )
     .attr("ID",function(d){ return d.ID } )
-    .style("fill", "teal");};
-
-drawCircles();
+    .attr("ID2",function(d){ return d.ID2 } )
+    .attr("week",function(d){ return d.week } )
+    .attr("class",(function(d){ return "w" + d.week } ))
+    .style("fill", function(d){ return d.Color })
+    .on("click", function(d){
+    				ActiveCategory = d3.select(this).attr("ID");
+    				updateArea();
+    				groups.selectAll("circle").classed("active", false);
+    				d3.select(this).classed("active", true);
+    })
+    ;};
+    drawCircles(4);
 updateData();

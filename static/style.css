@@ -10,23 +10,74 @@ html, body, #map {
 }
 
 circle {
-	fill-opacity: .3;
+	visibility: hidden;
+	fill-opacity: 0;
 	fill: gray;
+	stroke: grey;
 	stroke-width: 0px;
+	-webkit-transition: visibility 0s linear .5s, all 0.25s linear 0s;
+	-moz-transition: visibility 0s linear .5s, all 0.25s linear 0s;
+	transition: visibility 0s linear .5s, all 0.25s linear 0s;
 }
-circle:hover {
+
+circle.weeks {
+	visibility: visible;
+	fill-opacity: 0.3;
+	stroke-width: 1px;
+	-webkit-transition: visibility 0s linear 0.5s, all 0.25s linear 0.5s !important;
+	-moz-transition: visibility 0s linear 0.5s, all 0.25s linear 0.5s !important;
+	transition: visibility 0s linear 0.5s, all 0.25s linear 0.5s !important;
+}
+
+
+circle:hover, circle.hover {
 	stroke: black;
 	stroke-width: 2px;
-	cursor: crosshair;
+	cursor: pointer;
 }
+
+circle.active{
+	fill-opacity: .9;
+		stroke: lightgrey;
+	stroke-width: 6px;
+}
+
+circle.dataPoint{
+	visibility: visible;
+	fill-opacity: 1;
+	fill: lightgray;
+	stroke: grey;
+	stroke-width: 1px;
+}
+
 
 div.tooltip{
 	padding: 6px;
 	background: white;
+	outline: solid;
+	outline-width: 1px;
+	outline-color: 1px;
 	visibility: hidden;
+	opacity: 0;
 	position: absolute;
 	z-index: 10;
+			-webkit-transition: visibility 0s linear .5s, opacity 0.25s linear 0s;
+	-moz-transition: visibility 0s linear .5s, opacity 0.25s linear 0s;
+	transition: visibility 0s linear .5s, opacity 0.25s linear 0s;
+
 }
+
+
+
+
+div.tooltip.active{
+		visibility: visible;
+	opacity: 1;
+		-webkit-transition: visibility 0s linear 0.5s, opacity 0.25s linear 0.5s !important;
+	-moz-transition: visibility 0s linear 0.5s, opacity 0.25s linear 0.5s !important;
+	transition: visibility 0s linear 0.5s, opacity 0.25s linear 0.5s !important;
+}
+
 p.tooltip-text{
 	margin: 0px;
 	padding: 0px;
@@ -38,11 +89,12 @@ div.ui{	background: rgba(255,255,255,.8);
 		position: fixed;
 		margin: 0px;
 		padding: 10px;
-		opacity: .2;
+		opacity: .8;
 		border: dashed;
 		border-width: 1px;
 		border-color: rgba(0,0,0,1)
 		-webkit-transition: border-color .25s, opacity .25s;
+		-moz-transition: border-color .25s, opacity .25s;
 		transition: border-color .25s, opacity .25s;
 		}
 
@@ -74,25 +126,27 @@ em{
 		flex-flow: row wrap;
 		}
 
-ul.grid, ul.spread{max-height: 0;
+ul.hidden {max-height: 0;
 		opacity: 0;
 		padding:0px 6px;
+		z-index: -5;
  		margin:0 0 0 0;
 	    -webkit-transition: opacity .5s, padding .5s, margin .5s, max-height .5s;
 		transition: opacity .5s, padding .5s, margin .5s, max-height .5s;}
 
-ul.visible{max-height: 50;
+ul.visible{max-height: 58;
 		opacity: 1;
+		z-index: 4;
 		padding:  7px 6px !important;
  		margin: 0px 0 5px 0 !important;}
 
 
 ul.visible li label input{height:30px;}
 
-ul.grid li:first-child, ul.spread li:first-child {margin:0;
+ul.hidden li:first-child {    margin: 0px 0px 8px -1px;
 							padding-bottom: 1em;}
 
-ul.grid li, ul.spread li {margin: -14px 0 0px 0;}
+ul.hidden li {margin: -14px 0 0px 0;}
 
 ul li:first-child {width: 100%;
 	padding-left: .6em;
@@ -113,7 +167,7 @@ label input{  tab-index: 0;
                 height: 0;
 }
 
-ul.grid li, ul.spread li{visibility: hidden;}
+ul.hidden li{visibility: hidden;}
 ul.visible li {visibility: visible;}
 
 :checked + div {
@@ -130,7 +184,6 @@ ul.visible li {visibility: visible;}
   border: 0;
   border-radius: 0;
   color: white;
-  z-index:2;
   background-color:#CFCFCF;
   padding: 3.5px;
   border-style: solid;
