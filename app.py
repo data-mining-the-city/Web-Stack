@@ -84,7 +84,7 @@ def getData():
 
 	client = pyorient.OrientDB("localhost", 2424)
 	session_id = client.connect("root", "password")
-	db_name = "weibo_OLD"
+	db_name = "weibo"
 	db_username = "admin"
 	db_password = "admin"
 
@@ -95,7 +95,7 @@ def getData():
 		print "database [" + db_name + "] does not exist! session ending..."
 		sys.exit()
 
-        query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-01-22 00:01:30"'
+        query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-13 00:00:00"'
 
 	records = client.command(query.format(lat1, lat2, lng1, lng2))
 
@@ -110,6 +110,7 @@ def getData():
             feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
             feature["geometry"]["coordinates"]=[record.lat, record.lng]
             feature["properties"]["user"]= str(record.out)
+	    feature["properties"]["time"]= str(record.time)
             print feature["properties"]["user"]
 
             output["features"].append(feature)
@@ -132,7 +133,7 @@ def getData2():
 
 	analysis = request.args.get('analysis')
 
-	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
+	print "also received coordinates for heat map: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
 
 	client = pyorient.OrientDB("localhost", 2424)
 	session_id2 = client.connect("root", "password")
