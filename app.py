@@ -95,28 +95,95 @@ def getData():
 		print "database [" + db_name + "] does not exist! session ending..."
 		sys.exit()
 
-        query = 'SELECT * FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-13 00:00:00"'
+        query = 'SELECT * FROM USER WHERE CNY = 7 limit 1'
+        #lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-13 00:00:00"
 
-	records = client.command(query.format(lat1, lat2, lng1, lng2))
+	records = client.command(query.format())
 
 	numListings = len(records)
-	print 'received ' + str(numListings) + ' records'
+	print 'received ' + str(numListings) + ' users'
+	
+	userDict = {}
+	#scoreDict = {}
+
+	for record in records:
+		userDict[record._rid] = record.uid
+		#scoreDict[place._rid] = 0    
+
+	for i, rid in enumerate(userDict.keys()):
+
+		q.put('processing ' + str(i) + ' out of ' + str(numListings) + ' users...')
+
+		s = "SELECT expand(out_Checkin) FROM {} WHERE @class = 'User'"
+
+		checkins = client.command(s.format(rid))
+		for checkin in checkins:
+
+  		#userDict[rid]["checkins"] = cids
+		  print checkin.cid
+
+	q.put('matching records...')
+
+	#lines = []
+
+	#for place1 in placesDict.keys():
+	#	users1 = placesDict[place1]['users']
+	#	lat1 = placesDict[place1]['lat']
+	#	lng1 = placesDict[place1]['lng']
+	#	placesDict.pop(place1)
+	#	for place2 in placesDict.keys():
+	#		if len(users1 & placesDict[place2]['users']) > 1:
+	#			scoreDict[place1] += 1
+	#			scoreDict[place2] += 1
+	#			lines.append({'from': place1, 'to': place2, 'coordinates': [lat1, lng1, placesDict[place2]['lat'], placesDict[place2]['lng']]})
 
 	client.db_close()
 
-        output = {"type":"FeatureCollection","features":[]}
+
+	#output = {"type":"FeatureCollection","features":[]}
+
+	#for record in records:
+	#	if scoreDict[record._rid] < 1:
+	#		continue
+	#	feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+	#	feature["id"] = record._rid
+	#	feature["properties"]["name"] = record.title
+	#	feature["properties"]["cat"] = record.cat_1
+	#	feature["properties"]["score"] = scoreDict[record._rid]
+	#	feature["geometry"]["coordinates"] = [record.lat, record.lng]
+
+	#	output["features"].append(feature)
+
+
+	#output["lines"] = lines
+	
+	#for record1 in records1:
+	#    query2 = 'SELECT expand(out_Checkin) FROM USER WHERE uid = {}'
+	 #    records2 = client.command(query2.format(record1))
+	     
+	 #    output2 = {"type":"FeatureCollection","features":[]}
+	  #   for record2 in records2:
+	   #    feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}   
+	    #   feature["properties"]["checkin"]= str(record2.cid)
+	     #  print  feature["properties"]["checkin"]
+	       
+	      # output2["features"].append(feature)
+
+        #output = {"type":"FeatureCollection","features":[]}
         #add three sets of coordinates, times and checkins {UserID:{Check-In Time1: Check-In Location1}{Check-In Time2: Check-In Location2}{Check-In Time3: Check-In Location3}}
-        for record in records:
-            feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-            feature["geometry"]["coordinates"]=[record.lat, record.lng]
-            feature["properties"]["user"]= str(record.out)
-	    feature["properties"]["time"]= str(record.time)
-            print feature["properties"]["user"]
+        #for record in records:
+        #    feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+        #    feature["geometry"]["coordinates"]=[record.lat, record.lng]
+        #    feature["properties"]["user"]= str(record.out)
+	#    feature["properties"]["time"]= str(record.time)
+        #    print feature["properties"]["user"]
 
-            output["features"].append(feature)
+        #    output["features"].append(feature)
 
-	return json.dumps(output)
+	#return json.dumps(output)
 
+        client.db_close()
+        
 @app.route("/getData2/")
 def getData2():
 
