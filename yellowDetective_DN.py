@@ -18,7 +18,7 @@ import numpy as np
 def filter_database():
 
     client = pyorient.OrientDB("localhost", 2424)
-    session_id = client.connect("root", "password")
+    session_id = client.connect("root", "474F1CBE549F9E33FC8A0793C7819485072DAE07A4B704138010F28A28B69DF9")
 
     db_name = "weibo"
     db_username = "admin"

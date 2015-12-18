@@ -86,7 +86,7 @@ def filter_database():
 
     	#skip repeating users
     	#if user in uniqueUsers:
-    		continue
+    		#continue
     	#uniqueUsers.append(user)
 
     	#find connected places
