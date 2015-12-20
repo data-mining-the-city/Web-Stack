@@ -99,7 +99,7 @@ def getData():
 
 	
 	client = pyorient.OrientDB("localhost", 2424)
-	session_id = client.connect("root", "admin")
+	session_id = client.connect("root", "network.ssl.keyStorePassword")
 	db_name = "weibo"
 	db_username = "admin"
 	db_password = "admin"
@@ -113,8 +113,9 @@ def getData():
 
 #########################################################################
 #####################CATEGORY NAME CHECK PLEASE!!!!!#####################
-	query = 'SELECT  FROM Checkin WHERE time Between "{}" AND "{}" AND lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} limit 200'
-	results = client.command(query.format(startstr,endstr,lat1,lat2,lng1,lng2))
+        for n in range(0,10):
+	    query = 'SELECT  FROM Checkin WHERE time Between "{}" AND "{}" AND cat_2 = "Food/Drinks" AND cluster_id_1 = n AND lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} limit 200'
+	    results = client.command(query.format(startstr,endstr,lat1,lat2,lng1,lng2))
 	
 
 	output = {"type":"FeatureCollection","features":[]}
