@@ -1,7 +1,7 @@
 body {
 	padding: 0;
 	margin: 0;
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: Helvetica, Arial;
 	font-size: 12px;
 	line-height: 18px;
 }
@@ -9,12 +9,12 @@ html, body, #map {
 	height: 100%;
 }
 
-circle {
+/*circle {
 	fill-opacity: .4;
 	fill: black;
 	stroke: black;
 	stroke-width: 2px;
-}
+}*/
 circle:hover {
 	stroke: red;
 	/*fill: red;*/
@@ -23,11 +23,11 @@ circle:hover {
 	cursor: crosshair;
 }
 
-line {
+/*line {
 	stroke: black;
 	stroke-opacity: .2;
 	stroke-width: 1px;
-}
+}*/
 
 div.tooltip{
 	padding: 6px;
@@ -54,5 +54,6 @@ div.menu{
 
 em{
   color: red;
+  font-family: arial;
   font-weight: bold;
 }

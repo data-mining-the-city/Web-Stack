@@ -16,7 +16,18 @@ from Queue import Queue
 import numpy as np
 
 app = Flask(__name__)
+q = Queue()
 
+def event_stream():
+    while True:
+        result = q.get()
+        yield 'data: %s\n\n' % str(result)
+
+@app.route('/eventSource/')
+def sse_source():
+    return Response(
+            event_stream(), 
+            mimetype='text/event-stream' )
 @app.route("/")
 def index():
     return render_template("index.html")
