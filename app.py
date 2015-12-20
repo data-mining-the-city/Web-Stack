@@ -34,7 +34,15 @@ def index():
 
 @app.route("/getData/")
 def getData():
-	print 'get data'
+        q.put("starting data query...")
+
+	lat1 = str(request.args.get('lat1'))
+	lng1 = str(request.args.get('lng1'))
+	lat2 = str(request.args.get('lat2'))
+	lng2 = str(request.args.get('lng2'))
+
+	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
+	
 	client = pyorient.OrientDB("localhost", 2424)
 	session_id = client.connect("root", "474F1CBE549F9E33FC8A0793C7819485072DAE07A4B704138010F28A28B69DF9")
 	db_name = "weibo"
@@ -51,8 +59,11 @@ def getData():
 	
 
 	#get checkins
-        query = 'SELECT FROM Checkin WHERE lat BETWEEN 22.929935 AND 22.961751 AND lng BETWEEN 113.639837 AND 113.693017 AND time BETWEEN "2014-09-03 03:00:00" and "2014-09-04 04:00:00"'
-        records = client.command(query)
+	
+        query = 'SELECT FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-09-03 03:00:00" and "2014-09-04 04:00:00"'
+        records = client.command(query.format(lat1,lat2,lng1,lng2))
+        random.shuffle(records)
+	records = records[:100]
 
         numListings = len(records)
         print 'received ' + str(numListings) + ' Checkins'
@@ -83,17 +94,22 @@ def getData():
         
                 #for each connected place, store information of origin and connected place in separate lists
                 for place in places:
-                   	originPlaces = {"geometry":{"type":"Point"}}
+                   	originPlaces = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+                   	originPlaces["properties"]["text"] = record.text
           		originPlaces["geometry"]["coordinates"] = [record.lat, record.lng]
-          		connectedPlaces = {"geometry":{"type":"Point"}}
+          		
+          		connectedPlaces = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+		        connectedPlaces["properties"]["title"] = place.title
+		        connectedPlaces["properties"]["cat"] = place.category_name
 		        connectedPlaces["geometry"]["coordinates"] = [place.lat, place.lng]
+		        
                         lines.append({'coordinates': [record.lat, record.lng, place.lat, place.lng]})
                    
                         output["features"].append(originPlaces)
                         output["features1"].append(connectedPlaces)
           		
         output["lines"] = lines
-        
+        q.put('idle')
 	return json.dumps(output)
 
    	client.db_close()
