@@ -1,3 +1,3 @@
-# Team KUAILE Web Stack for DMC
+# Team KUAILE Web Stack for Datamining the City, GSAPP Fall 2015
 
-This is a test.
+A study of "non-migration" during the Chinese New Year.
