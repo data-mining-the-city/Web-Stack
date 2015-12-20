@@ -15,6 +15,7 @@ var tooltip_price = d3.select("#price");
 
 var map = L.map('map').setView([22.539029, 114.062076], 16);
 
+
 		//Creating variable for slider
 
 
@@ -49,7 +50,16 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 		var transform = d3.geo.transform({point: projectStream});
 		var path = d3.geo.path().projection(transform);
 
+		function timeChange(){
+			var time = document.getElementById("time").value;
+			console.log(time);
+			return time;
+
+		}
+
 		function updateData(){
+
+			alert("Running");
 
 			var mapBounds = map.getBounds();
 			var lat1 = mapBounds["_southWest"]["lat"];
@@ -64,30 +74,97 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 
 			// SEND USER CHOICES FOR ANALYSIS TYPE, CELL SIZE, HEAT MAP SPREAD, ETC. TO SERVER
 			request = "/getData?lat1=" + lat1 + "&lat2=" + lat2 + "&lng1=" + lng1 + "&lng2=" + lng2
-			request2 = "/getData2?lat1=" + lat1 + "&lat2=" + lat2 + "&lng1=" + lng1 + "&lng2=" + lng2
+			//request2 = "/getData2?lat1=" + lat1 + "&lat2=" + lat2 + "&lng1=" + lng1 + "&lng2=" + lng2
 
 			console.log(request);
 
+
 		  	d3.json(request, function(data) {
 
+		  		console.log(data);
+		  		var dataLength = data.features.length;
+		  		console.log(dataLength);
+		  		var dataInsideFunction = data;
+
+
+		  		
+
+
+
+					var time= timeChange();
+					var oneDay = 24 * 60 * 60 * 1000;
+		  			console.log(dataInsideFunction);
+		  			var dataLength = dataInsideFunction.features.length;
+		  			var currentData = [];
+		  			for(i=0;i<dataLength-1;i++){
+
+		  				var date1 = new Date('2014/01/15 00:00:00');
+						var date1Time = date1.getTime();
+						console.log(date1Time);
+						var date2 = new Date(data.features[i].properties.time);
+						var date2Time = date2.getTime();
+
+						var diff = Math.ceil((Math.abs(date2 - date1))/oneDay);
+						console.log(diff);
+
+
+		  				if(diff == time){
+		  					console.log(time);
+		  					currentData.push(dataInsideFunction.features[i]);
+
+		  				}
+		  			}
+
+
 				//create placeholder circle geometry and bind it to data
-				var circles = g.selectAll("circle").data(data.features);
-				circles.enter()
-					.append("circle")
-					.attr("r", 10)
-					.on("mouseover", function(d){
-						tooltip.style("visibility", "visible");
-						tooltip_title.text(d.properties.name);
-						tooltip_price.text("Price: " + d.properties.price);
-					})
-					.on("mousemove", function(){
-						tooltip.style("top", (d3.event.pageY-10)+"px")
-						tooltip.style("left",(d3.event.pageX+10)+"px");
-					})
-					.on("mouseout", function(){
-						tooltip.style("visibility", "hidden");
-					})
-				;
+				var circles = g.selectAll("circle").data(currentData);
+					circles.enter().append("circle")
+					.attr("r",5)
+					.style("fill","green");
+				
+				
+				
+
+					
+
+
+					
+					// .style("fill", function(d){
+					// 		if(diff == time) {
+					// 			return "green"}
+					// 			else {return "red"};
+					//})
+					// if(data.features[i].properties.time == time){
+					// 	circles.enter().append("circle")
+					// 	.attr("r","5")
+					// 	.attr("fill", "red");
+	    // 				//.attr("fill", function(d) { return "hsl(0, " + Math.floor(d.value*100) + "%, 50%)"; });
+					// }
+					// else
+					// {
+					// 	circles.enter().append("circle")
+					// 	.attr("r","5")
+					// 	.attr("fill","blue");
+					// }
+				
+
+				
+				// circles.enter()
+				// 	.append("circle")
+				// 	.attr("r", 5)
+				// 	.on("mouseover", function(d){
+				// 		tooltip.style("visibility", "visible");
+				// 		tooltip_title.text(d.properties.name);
+				// 		tooltip_price.text("Price: " + d.properties.price);
+				// 	})
+				// 	.on("mousemove", function(){
+				// 		tooltip.style("top", (d3.event.pageY-10)+"px")
+				// 		tooltip.style("left",(d3.event.pageX+10)+"px");
+				// 	})
+				// 	.on("mouseout", function(){
+				// 		tooltip.style("visibility", "hidden");
+				// 	})
+				// ;
 				// function to update the data
 				function update() {
 					// get bounding box of data

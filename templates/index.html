@@ -5,7 +5,7 @@
 	<script type="text/javascript" src="./static/lib/d3.js"></script>
 	<script type="text/javascript" src="./static/lib/leaflet.js"></script>
 	<link rel="stylesheet" href="./static/lib/leaflet.css" />
-	<link rel="stylesheet" href="./static/style.css" />
+	<link rel="stylesheet" href="./static/style.css"/>
 
 
 	
@@ -42,14 +42,17 @@
 			<div data-role="main" class="ui-content">
     <form method="post" action="demoform.asp">
       <label for="time">Week</label>
-      <input type="range" name="time" id="time" value="4" min="0" max="4">
-      <input type="submit" data-inline="true" data-popup-enabled="true"  value="Visualise">
+      <input type="range" name="time" id="time" value="20" min="1" max="28" onChange="updateData()">
+      <!--!input type="submit" data-inline="true" data-popup-enabled="true"  value="Visualise"=>
+    </form>
+  </div>
+</div>
     </form>
   </div>
 </div>
 
 
-		<!-- <form> -->
+		<form>
 			<!-- IMPLEMENT NEW USER INTERFACE ELEMENTS HERE -->
 			<!--origin/master-->
 			
