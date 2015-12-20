@@ -16,13 +16,32 @@
 	<div id="map"></div>
 
 	<div class="tooltip">
-		<p class="tooltip-text" id="title">This is the title</p>
-		<p class="tooltip-text" id="cat">This is the category</p>
+		<p class="tooltip-text" id="time">This is the time</p>
+		<p class="tooltip-text" id="day">This is the day of week</p>
 	</div>
 
+	<!-- setting up the dropdown menu on the users interface in order to change "day of week" and "time of day" from the client side -->
 	<div class="menu">
 		<p><h4>DMC Web Stack</h4></p>
 		<form>
+			<p><input id="heatmap" type="checkbox">Heat Map</p>
+			<p>Choose day of week:</p>
+			<select id="dropdownDay">
+				<option value="0">Sunday</option>
+				<option value="1">Monday</option>
+				<option value="2">Tuesday</option>
+				<option value="3">Wednesday</option>
+				<option value="4">Thursday</option>
+				<option value="5">Friday</option>
+				<option value="6">Saturday</option>
+			</select>
+			<p>Choose time of day:</p>
+			<select id="dropdownTime">
+				<option value="0">Night</option>
+				<option value="1">Morning</option>
+				<option value="2">Day</option>
+				<option value="3">Evening</option>
+			</select>
 			<p><input type="button" value="Update Data" onclick="updateData()"></p>
 			<p>Status: <em id="message"></em></p>
 		</form>
