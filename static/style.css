@@ -1,0 +1,212 @@
+body {
+	padding: 0;
+	margin: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	line-height: 18px;
+}
+html, body, #map {
+	height: 100vh;
+}
+
+circle {
+	visibility: hidden;
+	fill-opacity: 0;
+	fill: gray;
+	stroke: grey;
+	stroke-width: 0px;
+	-webkit-transition: visibility 0s linear .5s, all 0.25s linear 0s;
+	-moz-transition: visibility 0s linear .5s, all 0.25s linear 0s;
+	transition: visibility 0s linear .5s, all 0.25s linear 0s;
+}
+
+circle.weeks {
+	visibility: visible;
+	fill-opacity: 0.3;
+	stroke-width: 1px;
+	-webkit-transition: visibility 0s linear 0.5s, all 0.25s linear 0.5s !important;
+	-moz-transition: visibility 0s linear 0.5s, all 0.25s linear 0.5s !important;
+	transition: visibility 0s linear 0.5s, all 0.25s linear 0.5s !important;
+}
+
+
+circle:hover, circle.hover {
+	stroke: black;
+	stroke-width: 2px;
+	cursor: pointer;
+}
+
+circle.active{
+	fill-opacity: .9;
+		stroke: lightgrey;
+	stroke-width: 6px;
+}
+
+circle.dataPoint{
+	visibility: visible;
+	fill-opacity: 1;
+	fill: lightgray;
+	stroke: grey;
+	stroke-width: 1px;
+}
+
+
+div.tooltip{
+	padding: 6px;
+	background: white;
+	outline: solid;
+	outline-width: 1px;
+	outline-color: 1px;
+	visibility: hidden;
+	opacity: 0;
+	position: absolute;
+	z-index: 10;
+			-webkit-transition: visibility 0s linear .5s, opacity 0.25s linear 0s;
+	-moz-transition: visibility 0s linear .5s, opacity 0.25s linear 0s;
+	transition: visibility 0s linear .5s, opacity 0.25s linear 0s;
+
+}
+
+
+
+
+div.tooltip.active{
+		visibility: visible;
+	opacity: 1;
+		-webkit-transition: visibility 0s linear 0.5s, opacity 0.25s linear 0.5s !important;
+	-moz-transition: visibility 0s linear 0.5s, opacity 0.25s linear 0.5s !important;
+	transition: visibility 0s linear 0.5s, opacity 0.25s linear 0.5s !important;
+}
+
+p.tooltip-text{
+	margin: 0px;
+	padding: 0px;
+}
+
+h4{  font-size: 18px;}
+
+div.ui{	background: rgba(255,255,255,.8);
+		position: fixed;
+		margin: 0px;
+		padding: 10px;
+		opacity: .8;
+		border: dashed;
+		border-width: 1px;
+		border-color: rgba(0,0,0,1)
+		-webkit-transition: border-color .25s, opacity .25s;
+		-moz-transition: border-color .25s, opacity .25s;
+		transition: border-color .25s, opacity .25s;
+		}
+
+div.ui:hover{opacity: 1;
+			border-color: rgba(0,0,0,0)}
+
+div.menu{
+	top: 0px;
+	right: 0px;
+	width: 250px;
+	height: auto;
+}
+
+em{
+  color: red;
+  font-weight: bold;}
+
+
+ ul {  background: #EEEEEE;
+ 		padding:  7px 6px;
+ 		margin: 0 0 5px 0;
+		list-style: none;
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-flex-flow: row wrap;
+		flex-flow: row wrap;
+		}
+
+ul.hidden {max-height: 0;
+		opacity: 0;
+		padding:0px 6px;
+		z-index: -5;
+ 		margin:0 0 0 0;
+	    -webkit-transition: opacity .5s, padding .5s, margin .5s, max-height .5s;
+		transition: opacity .5s, padding .5s, margin .5s, max-height .5s;}
+
+ul.visible{max-height: 58;
+		opacity: 1;
+		z-index: 4;
+		padding:  7px 6px !important;
+ 		margin: 0px 0 5px 0 !important;}
+
+
+ul.visible li label input{height:30px;}
+
+ul.hidden li:first-child {    margin: 0px 0px 8px -1px;
+							padding-bottom: 1em;}
+
+ul.hidden li {margin: -14px 0 0px 0;}
+
+ul li:first-child {width: 100%;
+	padding-left: .6em;
+	padding-bottom: .5em;}
+
+
+ul li {
+	margin: 0;
+	padding-left: 2px;
+	flex-grow: 1;}
+
+label {  width: 100%;}
+
+label input{  tab-index: 0;
+                position: absolute;
+                opacity: 0;
+                width: 100%;
+                height: 0;
+}
+
+ul.hidden li{visibility: hidden;}
+ul.visible li {visibility: visible;}
+
+:checked + div {
+    background-color: rgb(247,138,138) !important;
+    border-color: rgb(247,138,138) !important;
+    color:white !important;
+    font-size: 15;
+/*    padding: 3.5px 3 !important;*/
+}
+
+
+.toggel{
+  text-align: center;
+  border: 0;
+  border-radius: 0;
+  color: white;
+  background-color:#CFCFCF;
+  padding: 3.5px;
+  border-style: solid;
+  border-color: #CFCFCF;
+  margin: 0 !important;
+  border-width: 4px;
+  font-family: sans-serif;
+  font-weight: bold !important;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+    -webkit-transition: background-color .35s, border-color .35s;
+    		transition: background-color .35s, border-color .35s;
+  -webkit-appearance: none;}
+
+  label:hover .toggel{
+  border: 0;
+  color: #CFCFCF;
+  border-style: solid;
+  
+  border-width: 4px;
+  background-color:white;
+    -webkit-transition: background-color .35s, border-color .35s;
+    		transition: background-color .35s, border-color .35s;
+  -webkit-appearance: none;}
+
+
