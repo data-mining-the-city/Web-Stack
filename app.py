@@ -60,7 +60,7 @@ def getData():
 		sys.exit()
 
 	#get checkins
-        query = 'SELECT FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-09-03 03:00:00" and "2014-09-04 04:00:00"'
+        query = 'SELECT FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2013-12-03 21:00:00" and "2013-12-04 04:00:00"'
         records = client.command(query.format(lat1, lat2, lng1, lng2))
         
         random.shuffle(records)
