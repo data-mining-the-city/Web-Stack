@@ -1,3 +1,6 @@
+#DMC TEAM KUAILE SERVER CODE
+#Note: you must pre-process the Weibo dataset to add the CNY value to Users, to add lat and lng values to Checkins
+
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -72,12 +75,6 @@ def getData():
 
 	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
 
-	#w = float(request.args.get('w'))
-	#h = float(request.args.get('h'))
-	#cell_size = float(request.args.get('cell_size'))
-
-	#analysis = request.args.get('analysis')
-
 	#CAPTURE ANY ADDITIONAL ARGUMENTS SENT FROM THE CLIENT HERE
 
 	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
@@ -95,211 +92,74 @@ def getData():
 		print "database [" + db_name + "] does not exist! session ending..."
 		sys.exit()
 
-        query = 'SELECT * FROM USER WHERE CNY = 7 limit 1'
-        #lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-01-21 00:01:00" and "2014-02-13 00:00:00"
+		#FIRST QUERY TO DATABASE, FILTERING USERS AND LIMITING TO 10
+        query = 'SELECT * FROM USER WHERE CNY = 7 limit 10'
 
-	records = client.command(query.format())
+
+	records = client.command(query)
 
 	numListings = len(records)
 	print 'received ' + str(numListings) + ' users'
-	
-	userDict = {}
-	#scoreDict = {}
-
-	for record in records:
-		userDict[record._rid] = record.uid
-		#scoreDict[place._rid] = 0    
-
-	for i, rid in enumerate(userDict.keys()):
-
-		q.put('processing ' + str(i) + ' out of ' + str(numListings) + ' users...')
-
-		s = "SELECT expand(out_Checkin) FROM {} WHERE @class = 'User'"
-
-		checkins = client.command(s.format(rid))
-		for checkin in checkins:
-
-  		#userDict[rid]["checkins"] = cids
-		  print checkin.cid
-
-	q.put('matching records...')
-
-	#lines = []
-
-	#for place1 in placesDict.keys():
-	#	users1 = placesDict[place1]['users']
-	#	lat1 = placesDict[place1]['lat']
-	#	lng1 = placesDict[place1]['lng']
-	#	placesDict.pop(place1)
-	#	for place2 in placesDict.keys():
-	#		if len(users1 & placesDict[place2]['users']) > 1:
-	#			scoreDict[place1] += 1
-	#			scoreDict[place2] += 1
-	#			lines.append({'from': place1, 'to': place2, 'coordinates': [lat1, lng1, placesDict[place2]['lat'], placesDict[place2]['lng']]})
-
-	client.db_close()
-
-
-	#output = {"type":"FeatureCollection","features":[]}
-
-	#for record in records:
-	#	if scoreDict[record._rid] < 1:
-	#		continue
-	#	feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-	#	feature["id"] = record._rid
-	#	feature["properties"]["name"] = record.title
-	#	feature["properties"]["cat"] = record.cat_1
-	#	feature["properties"]["score"] = scoreDict[record._rid]
-	#	feature["geometry"]["coordinates"] = [record.lat, record.lng]
-
-	#	output["features"].append(feature)
-
-
-	#output["lines"] = lines
-	
-	#for record1 in records1:
-	#    query2 = 'SELECT expand(out_Checkin) FROM USER WHERE uid = {}'
-	 #    records2 = client.command(query2.format(record1))
-	     
-	 #    output2 = {"type":"FeatureCollection","features":[]}
-	  #   for record2 in records2:
-	   #    feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}   
-	    #   feature["properties"]["checkin"]= str(record2.cid)
-	     #  print  feature["properties"]["checkin"]
-	       
-	      # output2["features"].append(feature)
-
-        #output = {"type":"FeatureCollection","features":[]}
-        #add three sets of coordinates, times and checkins {UserID:{Check-In Time1: Check-In Location1}{Check-In Time2: Check-In Location2}{Check-In Time3: Check-In Location3}}
-        #for record in records:
-        #    feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-        #    feature["geometry"]["coordinates"]=[record.lat, record.lng]
-        #    feature["properties"]["user"]= str(record.out)
-	#    feature["properties"]["time"]= str(record.time)
-        #    print feature["properties"]["user"]
-
-        #    output["features"].append(feature)
-
-	#return json.dumps(output)
-
-        client.db_close()
-        
-@app.route("/getData2/")
-def getData2():
-
-	q.put("starting data query...")
-
-	lat1 = str(request.args.get('lat1'))
-	lng1 = str(request.args.get('lng1'))
-	lat2 = str(request.args.get('lat2'))
-	lng2 = str(request.args.get('lng2'))
-
-	w = float(request.args.get('w'))
-	h = float(request.args.get('h'))
-	cell_size = float(request.args.get('cell_size'))
-
-	analysis = request.args.get('analysis')
-
-	print "also received coordinates for heat map: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
-
-	client = pyorient.OrientDB("localhost", 2424)
-	session_id2 = client.connect("root", "password")
-	db_name2 = "soufun"
-	db_username2 = "admin"
-	db_password2 = "admin"
-
-	if client.db_exists( db_name2, pyorient.STORAGE_TYPE_MEMORY ):
-		client.db_open( db_name2, db_username2, db_password2 )
-		print db_name2 + " opened successfully"
-	else:
-		print "database [" + db_name2 + "] does not exist! session ending..."
-		sys.exit()
-
-	query = 'SELECT FROM Listing WHERE latitude BETWEEN {} AND {} AND longitude BETWEEN {} AND {}'
-
-	records = client.command(query.format(lat1, lat2, lng1, lng2))
-
-	random.shuffle(records)
-	records = records[:100]
-
-	numListings = len(records)
-	print 'received ' + str(numListings) + ' records'
-
-	client.db_close()
-
-        minPrice = 1000000000
-        maxPrice = 0
-
-        for record in records:
-            price = record.price
-
-            if price > maxPrice:
-                maxPrice = price
-            if price < minPrice:
-                minPrice = price
-
-        print minPrice
-        print maxPrice
 
 	output = {"type":"FeatureCollection","features":[]}
 
-	for record in records:
-		feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-		feature["id"] = record._rid
-		feature["properties"]["name"] = record.title
-		feature["properties"]["price"] = record.price
-		feature["geometry"]["coordinates"] = [record.latitude, record.longitude]
+	userDict = {}
 
-		output["features"].append(feature)
+	for user in records:
+			userDict[user.uid] = {}
 
-	if analysis == "false":
-		q.put('idle')
-		return json.dumps(output)
+	for i, uid in enumerate(userDict.keys()):
 
-	q.put('starting analysis...')
+			print 'looking at user ' + str(uid)
+			q.put('processing ' + str(i) + ' out of ' + str(numListings) + ' users...')
 
-	output["analysis"] = []
+			#SECOND QUERY TO DATABASE, GETTING CHECKINS FOR USER
+			s = "SELECT expand(out_Checkin) FROM User WHERE uid = {}"
 
-	numW = int(math.floor(w/cell_size))
-	numH = int(math.floor(h/cell_size))
+			checkins = client.command(s.format(uid))
 
-	grid = []
+			polylines = []
 
-	for j in range(numH):
-		grid.append([])
-		for i in range(numW):
-			grid[j].append(0)
+			numCheckins = len(checkins)
+			cids = [checkin.cid for checkin in checkins]
+			print 'user ' + str(uid) + ' has ' + str(numCheckins) + ' checkins'
 
-	for record in records:
+			userDict[uid]['checkins'] = set(cids)
 
-		pos_x = int(remap(record.longitude, lng1, lng2, 0, numW))
-		pos_y = int(remap(record.latitude, lat1, lat2, numH, 0))
+			#THIRD AND FINAL QUERY TO DATABASE, FILTER CHECKINS
+			for cid in userDict[uid]['checkins']:
 
-		#TRY TESTING DIFFERENT VALUES FOR THE SPREAD FACTOR TO SEE HOW THE HEAT MAP VISUALIZATION CHANGES
-		spread = 12
+				t = "SELECT lat, lng, time, cat_1 FROM CHECKIN WHERE cid = {} AND time BETWEEN '2014-01-21 00:01:00' AND '2014-02-13 00:00:00'"
+				#Note that query is not limited geographically: performance varied with number of users found.
+				#AND lat BETWEEN {} AND {} AND lng BETWEEN {} AND {}"
 
-		for j in range(max(0, (pos_y-spread)), min(numH, (pos_y+spread))):
-			for i in range(max(0, (pos_x-spread)), min(numW, (pos_x+spread))):
-				grid[j][i] += 2 * math.exp((-point_distance(i,j,pos_x,pos_y)**2)/(2*(spread/2)**2))
+				CNYcheckins = client.command(t.format(cid, lat1, lat2, lng1, lng2))
+				testBool = len(CNYcheckins)
 
-	grid = normalizeArray(grid)
+				print 'querying ' + str(cid) + ' for user ' + str(uid)
 
-	offsetLeft = (w - numW * cell_size) / 2.0
-	offsetTop = (h - numH * cell_size) / 2.0
+				if len(CNYcheckins)!=0:
 
-	for j in range(numH):
-		for i in range(numW):
-			newItem = {}
+					print 'great success!'
 
-			newItem['x'] = offsetLeft + i*cell_size
-			newItem['y'] = offsetTop + j*cell_size
-			newItem['width'] = cell_size-1
-			newItem['height'] = cell_size-1
-			newItem['value'] = grid[j][i]
+					for j, CNYcheckin in enumerate(CNYcheckins):
 
-			output["analysis"].append(newItem)
+						q.put(str(j) + ' out of ' + str(numCheckins) + ' valid ...')
 
-	q.put('idle')
+						feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+						feature ["user"] = uid
+						feature ["properties"]["time"] = str(CNYcheckin.time)
+						feature ["properties"]["type"] = CNYcheckin.cat_1
+						feature["geometry"]["coordinates"] = [CNYcheckin.lat, CNYcheckin.lng]
+
+						output["features"].append(feature)
+						polylines.append({'coordinates'	: [CNYcheckin.lat, CNYcheckin.lng]})
+
+			output["polylines"] = polylines
+
+			q.put('idle')
+
+	client.db_close()
 
 	return json.dumps(output)
 

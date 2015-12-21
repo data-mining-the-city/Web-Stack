@@ -10,8 +10,7 @@ eventSrc.onmessage = function(e) {
 
 // DON'T FORGET TO CHANGE THIS CODE DEPENDING ON THE DATA YOU'RE DISPLAYING IN YOUR TOOLTIP
 var tooltip = d3.select("div.tooltip");
-var tooltip_title = d3.select("#title");
-var tooltip_price = d3.select("#price");
+var tooltip_category = d3.select("#cat");
 
 var map = L.map('map').setView([22.539029, 114.062076], 16);
 
@@ -86,11 +85,6 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 		  		console.log(dataLength);
 		  		var dataInsideFunction = data;
 
-
-		  		
-
-
-
 					var time= timeChange();
 					var oneDay = 24 * 60 * 60 * 1000;
 		  			console.log(dataInsideFunction);
@@ -107,65 +101,28 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 						var diff = Math.ceil((Math.abs(date2 - date1))/oneDay);
 						console.log(diff);
 
-
 		  				if(diff == time){
 		  					console.log(time);
 		  					currentData.push(dataInsideFunction.features[i]);
-
 		  				}
 		  			}
-
-
 				//create placeholder circle geometry and bind it to data
 				var circles = g.selectAll("circle").data(currentData);
 					circles.enter().append("circle")
-					.attr("r",5)
-					.style("fill","green");
-				
-				
-				
+					.on("mouseover", function(d){
+						tooltip.style("visibility", "visible");
+						tooltip_category.text("Category: " + d.properties.type);
+					})
+					.on("mousemove", function(){
+						tooltip.style("top", (d3.event.pageY-10)+"px")
+						tooltip.style("left",(d3.event.pageX+10)+"px");
+					})
+					.on("mouseout", function(){
+						tooltip.style("visibility", "hidden");
+					})
+					.attr("r",7)
+					//.style("fill","white");
 
-					
-
-
-					
-					// .style("fill", function(d){
-					// 		if(diff == time) {
-					// 			return "green"}
-					// 			else {return "red"};
-					//})
-					// if(data.features[i].properties.time == time){
-					// 	circles.enter().append("circle")
-					// 	.attr("r","5")
-					// 	.attr("fill", "red");
-	    // 				//.attr("fill", function(d) { return "hsl(0, " + Math.floor(d.value*100) + "%, 50%)"; });
-					// }
-					// else
-					// {
-					// 	circles.enter().append("circle")
-					// 	.attr("r","5")
-					// 	.attr("fill","blue");
-					// }
-				
-
-				
-				// circles.enter()
-				// 	.append("circle")
-				// 	.attr("r", 5)
-				// 	.on("mouseover", function(d){
-				// 		tooltip.style("visibility", "visible");
-				// 		tooltip_title.text(d.properties.name);
-				// 		tooltip_price.text("Price: " + d.properties.price);
-				// 	})
-				// 	.on("mousemove", function(){
-				// 		tooltip.style("top", (d3.event.pageY-10)+"px")
-				// 		tooltip.style("left",(d3.event.pageX+10)+"px");
-				// 	})
-				// 	.on("mouseout", function(){
-				// 		tooltip.style("visibility", "hidden");
-				// 	})
-				// ;
-				// function to update the data
 				function update() {
 					// get bounding box of data
 				    var bounds = path.bounds(data),
@@ -182,56 +139,11 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 				    circles
 				    	.attr("cx", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).x; })
 				    	.attr("cy", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).y; });
-
 				};
-				// call function to
+				// call function to update geometry
 				update();
 				map.on("viewreset", update);
 
-		var topleft = projectPoint(lat2, lng1);
-
-		svg_overlay.attr("width", w)
-			.attr("height", h)
-			.style("left", topleft.x + "px")
-			.style("top", topleft.y + "px");
-
-		var rectangles = g_overlay.selectAll("rect").data(data.analysis);
-		rectangles.enter().append("rect");
-		// rectangles.exit().remove();
-
-		rectangles
-			.attr("x", function(d) { return d.x; })
-			.attr("y", function(d) { return d.y; })
-			.attr("width", function(d) { return d.width; })
-			.attr("height", function(d) { return d.height; })
-	    	.attr("fill-opacity", ".2")
-	    	.attr("fill", function(d) { return "hsl(0, " + Math.floor(d.value*100) + "%, 50%)"; });
-
-		// function to update the data
-		function update() {
-
-			g_overlay.selectAll("rect").remove()
-
-			// get bounding box of data
-		    var bounds = path.bounds(data),
-		        topLeft = bounds[0],
-		        bottomRight = bounds[1];
-
-		    var buffer = 50;
-
-		    // reposition the SVG to cover the features.
-		    svg .attr("width", bottomRight[0] - topLeft[0] + (buffer * 2))
-		        .attr("height", bottomRight[1] - topLeft[1] + (buffer * 2))
-		        .style("left", (topLeft[0] - buffer) + "px")
-		        .style("top", (topLeft[1] - buffer) + "px");
-
-		    g   .attr("transform", "translate(" + (-topLeft[0] + buffer) + "," + (-topLeft[1] + buffer) + ")");
-
-		    // update circle position and size
-		    circles
-		    	.attr("cx", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).x; })
-		    	.attr("cy", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).y; })
-		};
 	});
 };
 		updateData();
