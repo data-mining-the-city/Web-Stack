@@ -11,6 +11,7 @@ import time
 import sys
 import random
 import math
+import datetime
 
 import pyorient
 
@@ -30,6 +31,23 @@ def point_distance(x1, y1, x2, y2):
 
 def remap(value, min1, max1, min2, max2):
 	return float(min2) + (float(value) - float(min1)) * (float(max2) - float(min2)) / (float(max1) - float(min1))
+
+#daymaker makes your day
+def daymaker(time):
+	temp = str(time)
+	tempYear = str(temp[0:4])
+	tempMonth = str(temp[5:7])
+	tempDay = str(temp[8:10])
+	dayscore = 0
+
+	tempDate = datetime.date(int(tempYear), int(tempMonth), int(tempDay))
+
+	if datetime.date(2014, 1, 15) <= tempDate <= datetime.date(2014,02, 12):
+		dayscore = tempDate - datetime.date(2014, 1, 15)
+	else:
+		dayscore = 0
+
+	return dayscore.days
 
 def normalizeArray(inputArray):
 	maxVal = 0
@@ -148,9 +166,10 @@ def getData():
 
 						feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
 						feature ["user"] = uid
-						feature ["properties"]["time"] = str(CNYcheckin.time)
+						feature ["properties"]["time"] = daymaker(CNYcheckin.time)
 						feature ["properties"]["type"] = CNYcheckin.cat_1
 						feature["geometry"]["coordinates"] = [CNYcheckin.lat, CNYcheckin.lng]
+						print feature ["properties"]["time"]
 
 						output["features"].append(feature)
 						polylines.append({'coordinates'	: [CNYcheckin.lat, CNYcheckin.lng]})
