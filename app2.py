@@ -103,42 +103,62 @@ def getData():
 	numListings = len(records)
 	print 'received ' + str(numListings) + ' users'
 
+	output = {"type":"FeatureCollection","features":[]}
+
 	userDict = {}
-	scoreDict = {}
 
 	for user in records:
-		userDict[user._rid] = {}
-		scoreDict[user._rid] = 0
+			userDict[user.uid] = {}
 
-	for i, rid in enumerate(userDict.keys()):
+	for i, uid in enumerate(userDict.keys()):
 
-		print str(rid)
-		q.put('processing ' + str(i) + ' out of ' + str(numListings) + ' users...')
+			print 'looking at user ' + str(uid)
+			q.put('processing ' + str(i) + ' out of ' + str(numListings) + ' users...')
 
-		s = "SELECT expand(out_Checkin) FROM User WHERE uid = {}"
+			s = "SELECT expand(out_Checkin) FROM User WHERE uid = {}"
 
-		checkins = client.command(s.format(rid))
-		cids = [checkin.cid for checkin in checkins]
+			checkins = client.command(s.format(uid))
+			cids = [checkin.cid for checkin in checkins]
+			print 'user ' + str(uid) + ' has ' + str(len(checkins)) + ' checkins'
 
-		userDict[rid]['checkins'] = set(cids)
-		print str(userDict[rid]['checkins'])
-		#for checkin in checkins:
-			#print checkin.cid
-
+			userDict[uid]['checkins'] = set(cids)
 
 	#Third and final query to databse, filtering previous checkins by time and location to get the ones we want.
-		for cid in userDict[rid]['checkins']:
+			for cid in userDict[uid]['checkins']:
 
-			t = "SELECT lat, lng FROM CHECKIN WHERE cid = {} AND time BETWEEN '2014-01-21 00:01:00' AND '2014-02-13 00:00:00' AND lat BETWEEN {} AND {} AND lng BETWEEN {} AND {}"
+				t = "SELECT lat, lng FROM CHECKIN WHERE cid = {} AND time BETWEEN '2014-01-21 00:01:00' AND '2014-02-13 00:00:00'"
+				#AND lat BETWEEN {} AND {} AND lng BETWEEN {} AND {}"
 
-			CNYcheckins = client.command(t.format(cid, lat1, lat2, lng1, lng2))
-			CNYcids = [CNYcheckin.cid for CNYcheckin in CNYcheckins]
+				CNYcheckins = client.command(t.format(cid, lat1, lat2, lng1, lng2))
+				testBool = len(CNYcheckins)
 
-			userDict[rid]['CNYcheckins'] = set(CNYcids)
+				print 'querying ' + str(cid) + ' for user ' + str(uid)
 
-	q.put ('Matching records..')
+				if len(CNYcheckins)!=0:
 
-	lines = []
+					print 'great success!'
+					#userDict[uid]['CNYcheckins'] = set(CNYcids)
+
+					q.put ('Matching records..')
+
+					for CNYcheckin in CNYcheckins:
+						feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+						feature ["user"] = uid
+						feature["geometry"]["coordinates"] = [CNYcheckin.lat, CNYcheckin.lng]
+
+						output["features"].append(feature)
+
+	client.db_close()
+
+	return json.dumps(output)
+
+	#for record in records
+	#	feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
+	#	feature["geometry"]["coordinates"]=[record.lat, record.lng]
+	#	feature["properties"]["user"]= str(record.out)
+	#	feature["properties"]["time"]= str(record.time)
+	#	output["features"].append(feature)
+        #    print feature["properties"]["user"]
 
 	#for user1 in userDict.keys():
 	#	checkin1 = userDict[user1]['checkins']
@@ -148,15 +168,10 @@ def getData():
 	#			scoreDict[user2] += 1
 	#			lines.append({'from': user1, 'to': user2, 'coordinates': [lat1, lng1, userDict[user2]['lat'], userDict[user2]['lng']]})
 
-	client.db_close()
 
 
-	#output = {"type":"FeatureCollection","features":[]}
+	#
 
-	for CNYcheckin in CNYcheckins:
-		feature = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
-		feature["id"] = CHYcheckin._cid
-		feature["geometry"]["coordinates"] = [CNYcheckin.lat, CNYcheckin.lng]
 
 	#	output["features"].append(feature)
 
