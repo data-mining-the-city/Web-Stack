@@ -28,13 +28,15 @@ def sse_source():
     return Response(
             event_stream(), 
             mimetype='text/event-stream' )
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/getData/")
 def getData():
-        q.put("starting data query...")
+	
+	q.put("Yellow Detective is querying the data....")
 
 	lat1 = str(request.args.get('lat1'))
 	lng1 = str(request.args.get('lng1'))
@@ -42,7 +44,8 @@ def getData():
 	lng2 = str(request.args.get('lng2'))
 
 	print "received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"
-	
+        q.put("received coordinates: [" + lat1 + ", " + lat2 + "], [" + lng1 + ", " + lng2 + "]"+"         Yellow Detective is querying the data....")
+
 	client = pyorient.OrientDB("localhost", 2424)
 	session_id = client.connect("root", "474F1CBE549F9E33FC8A0793C7819485072DAE07A4B704138010F28A28B69DF9")
 	db_name = "weibo"
@@ -55,15 +58,13 @@ def getData():
 	else:
 		print "database [" + db_name + "] does not exist! session ending..."
 		sys.exit()
-		
-	
 
 	#get checkins
-	
         query = 'SELECT FROM Checkin WHERE lat BETWEEN {} AND {} AND lng BETWEEN {} AND {} AND time BETWEEN "2014-09-03 03:00:00" and "2014-09-04 04:00:00"'
-        records = client.command(query.format(lat1,lat2,lng1,lng2))
+        records = client.command(query.format(lat1, lat2, lng1, lng2))
+        
         random.shuffle(records)
-	records = records[:100]
+	records = records[:60]
 
         numListings = len(records)
         print 'received ' + str(numListings) + ' Checkins'
@@ -91,7 +92,7 @@ def getData():
            	#find connected places
                 places = client.command("SELECT * FROM (TRAVERSE out(Checkin) FROM (SELECT * FROM {})) WHERE @class = 'Place'".format(record.out))
                 print 'received ' + str(len(places)) + ' connected places from ' + str(record._in)
-        
+                q.put("received" + str(len(places)) + "connected places from" + str(record._in))
                 #for each connected place, store information of origin and connected place in separate lists
                 for place in places:
                    	originPlaces = {"type":"Feature","properties":{},"geometry":{"type":"Point"}}
@@ -109,7 +110,9 @@ def getData():
                         output["features1"].append(connectedPlaces)
           		
         output["lines"] = lines
-        q.put('idle')
+        
+        q.put("Done! Received " + str(numListings) + " Checkins, Yellow Detective is having a rest")
+        
 	return json.dumps(output)
 
    	client.db_close()
