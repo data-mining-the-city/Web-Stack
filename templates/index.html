@@ -17,8 +17,9 @@
 		    margin: 0;
 		    font-family: Helvetica, Arial, sans-serif;
 			font-size: 12px;
+			font-style: bold;
 			line-height: 18px;
-			color:white;
+			color:black;
 		}
 
 		html, body, #map {
@@ -37,7 +38,7 @@
 */
 
 		circle:hover {
-		  	stroke: black;
+		  	stroke: red;
 		  	fill-opacity:.1;
 		  	fill:white;
 		  	stroke-width: 3px;
@@ -53,26 +54,26 @@
 
 		div.tooltip{
 			padding: 6px;
-			background: black;
-			visibility: visable;
+			background: white;
+			visibility: hidden;
 			position: absolute;
 			z-index: 10;
 		}
 		p.tooltip-text{
 			margin: 0px;
 			padding: 0px;
-			color:white;
+			color:black;
 		}
 
 		div.menu{
 		    position: fixed;
-		    margin: 0px;
-		    padding: 10px;
+		    margin: 15px;
+		    padding: 20px;
 		    top: 0px;
-		    right: 0px;
-		    width: 250px;
-		    height: 250px;
-		    background: rgba(255,255,255,0);
+		    left: 0px;
+		    width: 200px;
+		    height: 700px;
+		    background: rgba(255,255,255,.8);
 		}
 	</style>
 
@@ -103,11 +104,22 @@
 	    <form>
 <!-- 	        <p><input type="checkbox" id="heatmap">Heat Map</p>
 	        <p><input type="button" value="Update Data" onclick="updateData()"></p> -->
-			<p><input id="heatmap" type="checkbox">1</p>
-			<p><input id="tryagian" type="checkbox">2</p>
-			<p><input type="button" value="Upadate" onclick="updateData()"></p>
+			<p>INSTRUCTIONS</p>
+			<p>GSAPP Dataminign the City Fall 2015, Yellow Detective</p>
+			<p>The search starts from Houjie in Dongguan, you could also start from other places, by simply moving to other places and click update.</p>
+			<p><input type="button" value="Update" onclick="updateData()"></P>
 	        <p>Status: <em id="message"></em></p>
+			<p>From:<input type="date" id="date1"><input type="time" id="time1"></p>
+			<p>To:<input type="date" id="date2"><input type="time" id="time2"></p>
 	        <style>
+	    	br {
+	    		position:fixed;
+	    		top:500;
+	    		color: black;
+	    		font-family: Arial;
+	    		font-weight: bold;
+	    		font-size: 100%;
+	    	}
 	    	p {
 	    		color: #58585B;
 	    		font-size: Arial;
@@ -120,47 +132,62 @@
 
 	<script type="text/javascript">
 
-	// var eventOutputContainer = document.getElementById("message");
-	// var eventSrc = new EventSource("/eventSource");
+	var eventOutputContainer = document.getElementById("message");
+	var eventSrc = new EventSource("/eventSource");
 
-	// eventSrc.onmessage = function(e) {
-	//     console.log(e);
-	//     eventOutputContainer.innerHTML = e.data;
-	// };
+	eventSrc.onmessage = function(e) {
+	    console.log(e);
+	    eventOutputContainer.innerHTML = e.data;
+	};
 
-		var tooltip = d3.select("div.tooltip");
-		var tooltip_text = d3.select("#text");
-		var tooltip_latlng = d3.select("#latlng");
+	var tooltip = d3.select("div.tooltip");
+	var tooltip_text = d3.select("#text");
+	var tooltip_latlng = d3.select("#latlng");
 
-		var map = L.map('map').setView([22.941322,113.676795], 16);
 
-		L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
+	var map = L.map('map').setView([22.941322,113.676795], 16);
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={accessToken}', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',mapid: 'mapbox.light',accessToken: 'pk.eyJ1IjoibXVzb2ZhbiIsImEiOiJCQ0c0cGVnIn0.zMLchQ_sTFmn8ZDfp59YSA'
 		 }).addTo(map);
 
-		//create variables to store a reference to svg and g elements
+	//create variables to store a reference to svg and g elements
 
-		var svg = d3.select(map.getPanes().overlayPane).append("svg");
-		var g = svg.append("g").attr("class", "leaflet-zoom-hide");
-		var g_line = svg.append("g").attr("class", "leaflet-zoom-hide");
+	var svg = d3.select(map.getPanes().overlayPane).append("svg");
+	var g = svg.append("g").attr("class", "leaflet-zoom-hide")
+		.attr("id","g");
+	var g_line = svg.append("g").attr("class", "leaflet-zoom-hide").attr("id","g_line");
 
-		function projectPoint(lat, lng) {
-			return map.latLngToLayerPoint(new L.LatLng(lat, lng));
+	function projectPoint(lat, lng) {
+		return map.latLngToLayerPoint(new L.LatLng(lat, lng));
 		}
 
-		function projectStream(lat, lng) {
-			var point = projectPoint(lat,lng);
-			this.stream.point(point.x, point.y);
+	function projectStream(lat, lng) {
+		var point = projectPoint(lat,lng);
+		this.stream.point(point.x, point.y);
 		}
 
-		var transform = d3.geo.transform({point: projectStream});
-		var path = d3.geo.path().projection(transform);
+	var transform = d3.geo.transform({point: projectStream});
+	var path = d3.geo.path().projection(transform);
+
+
 
 	function updateData(){
 
+		var mapBounds = map.getBounds();
+		var lat1 = mapBounds["_southWest"]["lat"];
+		var lat2 = mapBounds["_northEast"]["lat"];
+		var lng1 = mapBounds["_southWest"]["lng"];
+		var lng2 = mapBounds["_northEast"]["lng"];
 
+		request = "/getData?lat1=" + lat1 + "&lat2=" + lat2 + "&lng1=" + lng1 + "&lng2=" + lng2
 
-	  	d3.json("/getData/", function(data) {
+		console.log(request);
+
+		g.selectAll("circle").remove()
+		g_line.selectAll("line").remove()
+
+	  	d3.json(request, function(data) {
 
 			//create placeholder circle geometry and bind it to data
 			var originP = g.selectAll("circle").data(data.features);
@@ -192,7 +219,7 @@
 				// 	tooltip.style("left",(d3.event.pageX+10)+"px");
 				// })
 				// .on("mouseout", function(){
-				// 	tooltip.style("visibility", "hidden");							
+				// 	tooltip.style("visibility", "hidden");					
 				// })
 			    ;			
 
@@ -200,23 +227,22 @@
 				.append("circle")
 				.transition()
 				.duration(2000)
-			    .attr("r", 10)
-			    .style("fill","#BE1E2D")
+			    .attr("r", 7)
+			    .style("fill","red")
 				// .on("mouseover", function(d){
-				// 	tooltip.style("visibility", "visible");
-				// 	tooltip_text.text("Text:" + d.properties.text);
-				// 	tooltip_latlng.text("Coordinates：" + d.geometry.coordinates);
-				// })
-				// .on("mousemove", function(){
-				// 	tooltip.style("top", (d3.event.pageY-10)+"px")
-				// 	tooltip.style("left",(d3.event.pageX+10)+"px");
-				// })
-				// .on("mouseout", function(){
-				// 	tooltip.style("visibility", "hidden");							
-				// })
-			    ;
+			 //        tooltip.style("visibility", "visible");
+			 //        tooltip_text.text(d.properties.text);
+			 //        tooltip_latlng.text("Coordinates: " + d.properties.coordinates);
+			 //    })
+			 //    .on("mousemove", function(){
+			 //        return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+			 //    })
+			 //    .on("mouseout", function(){
+			 //        return tooltip.style("visibility", "hidden");
+    // 			})
 
-
+    			;
+			    
 
 			// function to update the data
 			function update() {
@@ -262,7 +288,6 @@
 			map.on("viewreset", update);
 
 		});
-
 	};
 	
 	updateData();
