@@ -18,7 +18,7 @@ Project containes two branches:
 -The consumer behaivor, which is represented by the number of check-ins for the Food/Drinks categories, will change based on the stock market. When the stock market goes up, the total check-ins will go up, vice versa.
 
  4. Methodology - general description of how your project tests the hypothesis.
--We tried to cluster areas of the region to show the concentration of check-in types. More generally speaking we tried to represent the overal consumer trend of the region in order to compare this against global stock markets.
+-We tried to cluster areas of the region to show the concentration of check-in types. Then we track the total unmbers of check-ins within one cluster during a specific time for a specific check-in category. More generally speaking we tried to represent the overal consumer trend of the region in order to compare this against global stock markets.
 
  5. Minimum Viable Product - what assumptions or generalizations did you implement in order to generate a working MVP? How would the MVP be extended to create the ultimate product you envision?
  -We had issues running the loop within a responsive timeframe. The requests to the server would take +10 seconds for one check-in and resulted in no response for the range of 10 clusters. Without knowings the exact issues of the dataset, a sample of data would be plotted and color coordinated in order to show spatial diversity of check-ins.
