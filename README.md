@@ -1,5 +1,4 @@
-# Core DMC Web Stack platform
+# Team KUAILE Web Stack for Datamining the City, GSAPP Fall 2015
 
-Project containes two branches:
-- **soufun** - Implementation using soufun rental listing data set with heat map and interpolation (ML) analysis using overlay grid
-- **weibo** - Implementation using weibo social media data set with graph analysis, click events, and animated transitions.
+A study of "non-migration" during the Chinese New Year.
+Use of this web-stack will require modifying the Weibo database, to add lat/lng to Checkins and CNY value to Users. Python scripts to do so are included.
