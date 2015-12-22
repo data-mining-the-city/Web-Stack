@@ -111,7 +111,7 @@ def getData():
 		sys.exit()
 
 		#FIRST QUERY TO DATABASE, FILTERING USERS AND LIMITING TO 10
-        query = 'SELECT * FROM USER WHERE CNY = 7 limit 10'
+        query = 'SELECT * FROM USER WHERE CNY = 7 limit 20'
 
 
 	records = client.command(query)

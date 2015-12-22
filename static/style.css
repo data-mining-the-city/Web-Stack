@@ -18,7 +18,6 @@ html, body, #map {
 }
 
 circle {
-	fill: #FFB218;
 	stroke-width: 0px;
 	transition: shape-outside 1s;
 	shape-outside: circle(30%);

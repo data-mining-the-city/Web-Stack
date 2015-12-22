@@ -12,10 +12,7 @@ eventSrc.onmessage = function(e) {
 var tooltip = d3.select("div.tooltip");
 var tooltip_category = d3.select("#cat");
 
-var map = L.map('map').setView([22.539029, 114.062076], 16);
-
-
-		//Creating variable for slider
+var map = L.map('map').setView([22.799606, 113.567950], 9);
 
 
 		//this is the OpenStreetMap tile implementation
@@ -50,17 +47,12 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 		var transform = d3.geo.transform({point: projectStream});
 		var path = d3.geo.path().projection(transform);
 
-		function timeChange(){
-			var slidervalue = document.getElementById("time").value;
-			console.log(slidervalue);
-			return slidervalue;
-
-			update();}
+		var slidervalue = document.getElementById("slider").value;;
 
 		function sliderConvert(dayscore) {
 				dayscore = JSON.parse(dayscore)
 
-				if (dayscore == document.getElementById("time").value){
+				if (dayscore == document.getElementById("slider").value){
 					return 1;}
 				else{
 				return .1;
@@ -79,7 +71,7 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 
 			// CAPTURE USER INPUT FOR CELL SIZE FROM HTML ELEMENTS
 			//var cell_size = 25;
-		//	var w = window.innerWidth;
+			//var w = window.innerWidth;
 			//var h = window.innerHeight;
 
 			// SEND USER CHOICES FOR ANALYSIS TYPE, CELL SIZE, HEAT MAP SPREAD, ETC. TO SERVER
@@ -91,35 +83,8 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 
 			g.selectAll("circle").remove()
 
-
 		  	d3.json(request, function(data) {
 
-		  		//console.log(data);
-		  		//var dataLength = data.features.length;
-		  	//	console.log(dataLength);
-		  		//var dataInsideFunction = data;
-
-				//	var time= timeChange();
-				//	var oneDay = 24 * 60 * 60 * 1000;
-		  	//		console.log(dataInsideFunction);
-		  	//		var dataLength = dataInsideFunction.features.length;
-		  	//		var currentData = [];
-		  	//		for(i=0;i<dataLength-1;i++){
-
-		//  				var date1 = new Date('2014/01/15 00:00:00');
-		//				var date1Time = date1.getTime();
-				//		console.log(date1Time);
-					//	var date2 = new Date(data.features[i].properties.time);
-						//var date2Time = date2.getTime();
-
-					//	var diff = Math.ceil((Math.abs(date2 - date1))/oneDay);
-					//	console.log(diff);
-
-		  			//	if(diff == time){
-		  				//	console.log(time);
-		  					//currentData.push(dataInsideFunction.features[i]);
-		  		//		}
-		  		//	}
 				//create placeholder circle geometry and bind it to data
 				var circles = g.selectAll("circle").data(data.features);
 					circles.enter()
@@ -135,11 +100,12 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 						.on("mouseout", function(){
 							tooltip.style("visibility", "hidden");
 						})
-						.attr("r",7);
+						.attr("r",7)
+						.attr("fill-opacity", .1)
+						.style("fill", "white");
 
 						update();
 						map.on("viewreset", update);
-					//.style("fill","white");
 
 				function update() {
 					// get bounding box of data
@@ -156,13 +122,32 @@ var map = L.map('map').setView([22.539029, 114.062076], 16);
 				    // update circle position and size
 				    circles
 				    	.attr("cx", function(d) { return projectPoint(d.geometry.coordinates[0], d.geometry.coordinates[1]).x; })
-				    	.attr("cy", function(d) { return projectPoint(d.geometry.coordinates	[0], d.geometry.coordinates[1]).y; })
-							.attr("fill-opacity", function(d) { return sliderConvert(d.properties.time); });
+				    	.attr("cy", function(d) { return projectPoint(d.geometry.coordinates	[0], d.geometry.coordinates[1]).y; });
+				};
 
+
+
+					update()
+					changeSlider();})
+
+
+				}
+
+				function changeSlider(){
+					console.log(document.getElementById("slider").value)
+
+					g.selectAll("circle")
+						.attr("r",7)
+						.attr("fill-opacity", .1)
+						.style("fill", "white")
+						.filter( function (d) {return(d.properties.time == document.getElementById("slider").value)})
+							.attr("fill-opacity", 1)
+							.style("fill", "#FFB218")
+							.attr("r", 10)
 				};
 // call function to update geometry
 
 
-	});
-};
+	;
+;
 		updateData();
